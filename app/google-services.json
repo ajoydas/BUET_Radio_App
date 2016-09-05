@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "413306105383",
+    "firebase_url": "https://buetradio-865f1.firebaseio.com",
+    "project_id": "buetradio-865f1",
+    "storage_bucket": "buetradio-865f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413306105383:android:108a0e383694f369",
+        "android_client_info": {
+          "package_name": "radio.buetian.org.buetradio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413306105383-74jgq8tlaugc3t53uphok0nrfiviat8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9vk6D84cociIMmRuV4QciCqRWKidBTlA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
