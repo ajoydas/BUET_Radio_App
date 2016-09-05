@@ -1,6 +1,9 @@
 package radio.buetian.org.buetradio;
 
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
@@ -8,6 +11,7 @@ import android.os.AsyncTask;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -19,6 +23,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -29,7 +35,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private Button play,stop,record,signin,signup;
     private MediaPlayer mPlayer;
     private String stream_url = "http://87.117.217.103:38164";
-    private String stream = "icy://87.117.217.103:38164";
 
     private InputStream inputStream;
     private FileOutputStream fileOutputStream;
@@ -44,6 +49,21 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
+
+        try{
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "radio.buetian.org.buetradio", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
         play = (Button) findViewById(R.id.bPlay);
         stop = (Button) findViewById(R.id.bStop);
@@ -214,5 +234,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, SignIn.class);
             startActivity(intent);
         }
+
+
     }
 }
