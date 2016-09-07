@@ -9,13 +9,18 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="radio.buetian.org.buetradio.ChatActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/messages_recycler"
-        android:layout_above="@+id/bComment"
-        android:layout_alignParentTop="true">
-    </android.support.v7.widget.RecyclerView>
+    <!--<android.support.v7.widget.RecyclerView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/messages_recycler"-->
+        <!--android:layout_above="@+id/bComment"-->
+        <!--android:layout_alignParentTop="true">-->
+    <!--</android.support.v7.widget.RecyclerView>-->
+    <!---->
+
+
+
+
 
     <EditText
         android:layout_width="wrap_content"
@@ -36,5 +41,14 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/chatList"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/eComment" />
 
 </RelativeLayout>

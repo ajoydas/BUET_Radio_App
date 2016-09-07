@@ -15,11 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
 import com.firebase.client.Query;
+import com.firebase.ui.FirebaseListAdapter;
 import com.firebase.ui.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -41,6 +44,7 @@ public class ChatActivity extends AppCompatActivity {
     private int flag;
     private String profilePic;
     private ProgressDialog progressDialog;
+    private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,22 +62,35 @@ public class ChatActivity extends AppCompatActivity {
 
         ref = new Firebase("https://buetradio-865f1.firebaseio.com/chat");
         //Query query=new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
+        listView = (ListView) findViewById(R.id.chatList);
+        ListAdapter ladapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, ref)
+        {
+
+            protected void populateView(View view, ChatMessage chatMessage, int i) {
+                TextView nameText = (TextView) view.findViewById(R.id.user);
+                TextView messageText = (TextView) view.findViewById(R.id.message);
+                ImageView photo = (ImageView) view.findViewById(R.id.iPhoto);
+                nameText.setText(chatMessage.getUser());
+                messageText.setText(chatMessage.getMessage());
+                //chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
+                photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
+            }
+        };
+        listView.setAdapter(ladapter);
 
 
-
-
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.messages_recycler);
+/*        RecyclerView recycler = (RecyclerView) findViewById(R.id.messages_recycler);
         recycler.setHasFixedSize(true);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         //linearLayoutManager.setStackFromEnd(true);
-        recycler.setLayoutManager(linearLayoutManager);
+        recycler.setLayoutManager(linearLayoutManager);*/
 
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         StrictMode.setThreadPolicy(policy);
 
 
-        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(ChatMessage.class, R.layout.message,ChatMessageViewHolder.class,ref) {
+/*        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(ChatMessage.class, R.layout.message,ChatMessageViewHolder.class,ref) {
             @Override
             protected void populateViewHolder(ChatMessageViewHolder chatMessageViewHolder, ChatMessage chatMessage, int i) {
                 chatMessageViewHolder.nameText.setText(chatMessage.getUser());
@@ -86,7 +103,7 @@ public class ChatActivity extends AppCompatActivity {
         };
         recycler.setAdapter(adapter);
 
-        recycler.scrollToPosition(recycler.getAdapter().getItemCount()-1);
+        recycler.scrollToPosition(recycler.getAdapter().getItemCount()-1);*/
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
