@@ -1,9 +1,11 @@
 package radio.buetian.org.buetradio;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,6 +40,7 @@ public class ChatActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     private int flag;
     private String profilePic;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,33 +55,45 @@ public class ChatActivity extends AppCompatActivity {
 
 
         FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder> adapter;
-        ref = new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
+
+        ref = new Firebase("https://buetradio-865f1.firebaseio.com/chat");
         //Query query=new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
+
+
+
 
         RecyclerView recycler = (RecyclerView) findViewById(R.id.messages_recycler);
         recycler.setHasFixedSize(true);
-        recycler.setLayoutManager(new LinearLayoutManager(this));
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        //linearLayoutManager.setStackFromEnd(true);
+        recycler.setLayoutManager(linearLayoutManager);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
+
 
         adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(ChatMessage.class, R.layout.message,ChatMessageViewHolder.class,ref) {
             @Override
             protected void populateViewHolder(ChatMessageViewHolder chatMessageViewHolder, ChatMessage chatMessage, int i) {
                 chatMessageViewHolder.nameText.setText(chatMessage.getUser());
                 chatMessageViewHolder.messageText.setText(chatMessage.getMessage());
-                chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
-                //chatMessageViewHolder.photo.setImageURI(Uri.parse(chatMessage.getPhotoUrl()));
+                //chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
+                chatMessageViewHolder.photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
 
             }
 
         };
         recycler.setAdapter(adapter);
 
+        recycler.scrollToPosition(recycler.getAdapter().getItemCount()-1);
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChatMessage chat=new ChatMessage();
                 chat.setUser(mAuth.getCurrentUser().getDisplayName());
                 chat.setMessage(write.getText().toString());
-                chat.setPhotoUrl(profilePic);
+                chat.setPhotoUrl(mAuth.getCurrentUser().getPhotoUrl().toString());
                 ref.push().setValue(chat);
             }
         });
@@ -86,6 +101,25 @@ public class ChatActivity extends AppCompatActivity {
     Bitmap bm= null;
 
     private Bitmap getImageBitmap(String url) {
+        Bitmap bm = null;
+        try {
+            progressDialog=ProgressDialog.show(ChatActivity.this, "Refreshing......","Please wait...",true,true);
+            URL aURL = new URL(url);
+            URLConnection conn = aURL.openConnection();
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            BufferedInputStream bis = new BufferedInputStream(is);
+            bm = BitmapFactory.decodeStream(bis);
+            bis.close();
+            is.close();
+        } catch (IOException e) {
+            Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_SHORT).show();
+        }
+        progressDialog.dismiss();
+        return bm;
+    }
+
+   /* private Bitmap getImageBitmap(String url) {
         //Bitmap bm = null;
         new LoadImage(url).execute();
         return bm;
@@ -115,7 +149,7 @@ public class ChatActivity extends AppCompatActivity {
             }
             return null;
         }
-    }
+    }*/
 
     private static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
