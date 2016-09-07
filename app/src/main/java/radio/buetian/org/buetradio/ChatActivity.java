@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.w3c.dom.Text;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -35,12 +37,13 @@ public class ChatActivity extends AppCompatActivity {
     private EditText write;
     FirebaseAuth mAuth;
     private int flag;
+    private String profilePic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-
+        profilePic=getIntent().getExtras().getString("Photo");
         int flag=0;
         mAuth=FirebaseAuth.getInstance();
 
@@ -61,7 +64,7 @@ public class ChatActivity extends AppCompatActivity {
             protected void populateViewHolder(ChatMessageViewHolder chatMessageViewHolder, ChatMessage chatMessage, int i) {
                 chatMessageViewHolder.nameText.setText(chatMessage.getUser());
                 chatMessageViewHolder.messageText.setText(chatMessage.getMessage());
-                chatMessageViewHolder.photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
+                chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
                 //chatMessageViewHolder.photo.setImageURI(Uri.parse(chatMessage.getPhotoUrl()));
 
             }
@@ -75,7 +78,7 @@ public class ChatActivity extends AppCompatActivity {
                 ChatMessage chat=new ChatMessage();
                 chat.setUser(mAuth.getCurrentUser().getDisplayName());
                 chat.setMessage(write.getText().toString());
-                chat.setPhotoUrl(mAuth.getCurrentUser().getPhotoUrl().toString());
+                chat.setPhotoUrl(profilePic);
                 ref.push().setValue(chat);
             }
         });
@@ -127,5 +130,24 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
+    //String to Bitmap
+    public Bitmap StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
 
+    //Bitmap to string converter
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
 }

@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -38,7 +40,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         imageView = (ImageView) findViewById(R.id.image);
         logout = (Button) findViewById(R.id.bLogout);
         chat = (Button) findViewById(R.id.bChat);
-
+        chat.setEnabled(false);
 
         firebase = FirebaseAuth.getInstance();
 
@@ -73,9 +75,18 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         protected void onPostExecute(Object o) {
             super.onPostExecute(o);
             imageView.setImageBitmap(bm);
+            chat.setEnabled(true);
         }
     }
 
+    //Bitmap to string converter
+    public String getStringImage(Bitmap bmp){
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] imageBytes = baos.toByteArray();
+        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        return encodedImage;
+    }
 
 
     private Bitmap getImageBitmap(String url) {
@@ -92,6 +103,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         } catch (IOException e) {
             Toast.makeText(this,"Network Error",Toast.LENGTH_SHORT).show();
         }
+
         return bm;
     }
 
@@ -105,9 +117,10 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
         if(view==chat)
         {
-
+            Intent intent=new Intent(this,ChatActivity.class);
+            intent.putExtra("Photo",getStringImage(bm));
             finish();
-            startActivity(new Intent(this,ChatActivity.class));
+            startActivity(intent);
         }
     }
 }
