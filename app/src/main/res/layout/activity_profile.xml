@@ -10,7 +10,7 @@
     tools:context="radio.buetian.org.buetradio.ProfileActivity">
 
     <ImageView
-        android:layout_width="100dp"
+        android:layout_width="wrap_content"
         android:layout_height="100dp"
         android:id="@+id/image"
         android:layout_alignParentTop="true"
@@ -41,5 +41,15 @@
         android:text="Log Out"
         android:id="@+id/bLogout"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_toLeftOf="@+id/tName"
+        android:layout_toStartOf="@+id/tName" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chat"
+        android:id="@+id/bChat"
+        android:layout_alignParentBottom="true"
+        android:layout_toRightOf="@+id/tEmail"
+        android:layout_toEndOf="@+id/tEmail" />
 </RelativeLayout>

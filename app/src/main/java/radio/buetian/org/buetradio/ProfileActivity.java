@@ -24,7 +24,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
     TextView name,email;
     ImageView imageView;
-    Button logout;
+    Button logout,chat;
     FirebaseAuth firebase;
     private Bitmap bm;
 
@@ -37,6 +37,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         email = (TextView) findViewById(R.id.tEmail);
         imageView = (ImageView) findViewById(R.id.image);
         logout = (Button) findViewById(R.id.bLogout);
+        chat = (Button) findViewById(R.id.bChat);
 
 
         firebase = FirebaseAuth.getInstance();
@@ -52,6 +53,7 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         logout.setOnClickListener(this);
+        chat.setOnClickListener(this);
 
     }
 
@@ -100,6 +102,12 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             firebase.signOut();
             finish();
             startActivity(new Intent(this,SignIn.class));
+        }
+        if(view==chat)
+        {
+
+            finish();
+            startActivity(new Intent(this,ChatActivity.class));
         }
     }
 }
