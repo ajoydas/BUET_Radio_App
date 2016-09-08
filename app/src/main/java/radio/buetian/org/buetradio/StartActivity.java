@@ -9,11 +9,14 @@ import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -30,9 +33,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-public class StartActivity extends AppCompatActivity implements View.OnClickListener{
+public class StartActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button play,stop,record,signin,signup;
+    private Button play, stop, record, signin, signup;
     private MediaPlayer mPlayer;
     private String stream_url = "http://87.117.217.103:38164";
 
@@ -43,6 +46,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private long startTime;
     private boolean isRecording;
     private long stopTime;
+    private Toolbar mToolbar;
+    private ViewGroup mContainerToolbar;
+    private FragmentDrawer mDrawerFragment;
 
 
     @Override
@@ -50,7 +56,12 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        try{
+        setupDrawer();
+        //animate the Toolbar when it comes into the picture
+        //AnimationUtils.animateToolbarDroppingDown(mContainerToolbar);
+
+
+        try {
             PackageInfo info = getPackageManager().getPackageInfo(
                     "radio.buetian.org.buetradio", PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
@@ -78,10 +89,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         signin.setOnClickListener(this);
 
         try {
-            if(getIntent().getExtras().getString("Message")!=null)
-            {
+            if (getIntent().getExtras().getString("Message") != null) {
                 Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("Message",getIntent().getExtras().getString("Message"));
+                intent.putExtra("Message", getIntent().getExtras().getString("Message"));
                 finish();
                 startActivity(intent);
             }
@@ -91,8 +101,36 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     }
 
-    private class Recording extends AsyncTask
-    {
+    public void onDrawerSlide(float slideOffset) {
+
+    }
+    public View getContainerToolbar() {
+        return mContainerToolbar;
+    }
+    private void setupDrawer() {
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        //set the Toolbar as ActionBar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+    }
+
+
+    public void onDrawerItemClicked(int index) {
+        if (index == 2) {
+            startActivity(new Intent(this, SignIn.class));
+        } else {
+            //mPager.setCurrentItem(index);
+            startActivity(new Intent(this, SignIn.class));
+        }
+    }
+
+
+    private class Recording extends AsyncTask {
 
 
         @Override
@@ -115,21 +153,18 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
                 String fileName = File.separator + "radio_" + "recording_" + System.currentTimeMillis();
 
-                if(isSDPresent)
-                {
+                if (isSDPresent) {
                     outputSource = Environment.getExternalStorageDirectory() + fileName;
 
-                }
-                else
-                {
+                } else {
                     outputSource = Environment.getDataDirectory() + fileName;
                 }
 
-                String contentType="audio/mpeg";
+                String contentType = "audio/mpeg";
 
-                if(contentType.equals("audio/aacp"))
-                    fileOutputStream = new FileOutputStream(outputSource  + ".acc");
-                else if(contentType.equals("audio/mpeg"))
+                if (contentType.equals("audio/aacp"))
+                    fileOutputStream = new FileOutputStream(outputSource + ".acc");
+                else if (contentType.equals("audio/mpeg"))
                     fileOutputStream = new FileOutputStream(outputSource + ".mp3");
                 else
                     fileOutputStream = new FileOutputStream(outputSource + ".nieznany_format");
@@ -196,8 +231,7 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
-        if(view==play)
-        {
+        if (view == play) {
             try {
                 mPlayer.reset();
                 mPlayer.setDataSource(stream_url);
@@ -211,26 +245,23 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 });
 
             } catch (IOException e) {
-                Toast.makeText(this,"Couldn't Connect",Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Couldn't Connect", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
 
         }
-        if(view==stop)
-        {
+        if (view == stop) {
             mPlayer.stop();
 
-            isRecording=false;
+            isRecording = false;
 
         }
 
-        if(view==record)
-        {
+        if (view == record) {
             new Recording().execute();
         }
 
-        if(view==signin)
-        {
+        if (view == signin) {
             Intent intent = new Intent(this, SignIn.class);
             startActivity(intent);
         }
