@@ -101,7 +101,8 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
             bis.close();
             is.close();
         } catch (IOException e) {
-            Toast.makeText(this,"Network Error",Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this,"Network Error",Toast.LENGTH_SHORT).show();
+            bm=BitmapFactory.decodeResource(getApplicationContext().getResources(),R.drawable.ic_google);
         }
 
         return bm;

@@ -4,7 +4,7 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:background="@color/colorPrimaryText"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <com.pkmmte.view.CircularImageView
         android:id="@+id/image_profile"
@@ -43,7 +43,7 @@
             android:text="Viewer"
             android:id="@+id/headername"
             android:textColor="@android:color/white"
-            android:gravity="right"
+            android:gravity="end"
             style="@style/TextAppearance.AppCompat.Medium" />
 
         <View
@@ -54,9 +54,9 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fair Files"
+            android:text="to BUET RADIO"
             android:textColor="@android:color/white"
-            android:gravity="right"
+            android:gravity="end"
             style="@style/TextAppearance.AppCompat.Small" />
     </LinearLayout>
 

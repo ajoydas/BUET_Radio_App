@@ -1,10 +1,6 @@
 package radio.buetian.org.buetradio;
 
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
-import android.media.AudioRecord;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.AsyncTask;
@@ -13,21 +9,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -49,7 +42,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     private Toolbar mToolbar;
     private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
+    private GridviewAdapter mAdapter;
+    private ArrayList<String> listMenuItem;
+    private ArrayList<Integer> listIcon;
 
+    private GridView gridView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +54,44 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_start);
 
         setupDrawer();
+
+        prepareList();
+
+        // prepared arraylist and passed it to the Adapter class
+        mAdapter = new GridviewAdapter(this,listMenuItem, listIcon);
+
+        // Set custom adapter to gridview
+        gridView = (GridView) findViewById(R.id.gridView);
+        gridView.setAdapter(mAdapter);
+
+        // Implement On Item click listener
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+                                    long arg3) {
+                Toast.makeText(StartActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                if(position==0)
+                {
+                    Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
+                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    finish();
+                    startActivity(intent);
+                }
+                else if(position==1)
+                {
+                    Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
+                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    finish();
+                    startActivity(intent);
+                }
+
+            }
+        });
+
         //animate the Toolbar when it comes into the picture
         //AnimationUtils.animateToolbarDroppingDown(mContainerToolbar);
+/*
 
 
         try {
@@ -98,8 +131,37 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         } catch (Exception e) {
             e.printStackTrace();
         }
+*/
 
     }
+
+    public void prepareList() {
+        listMenuItem = new ArrayList<String>();
+
+        listMenuItem.add("Channel 1");
+        listMenuItem.add("Channel 2");
+        listMenuItem.add("Radio Hits");
+        listMenuItem.add("Archive");
+        listMenuItem.add("Chat Room");
+        listMenuItem.add("Events");
+        listMenuItem.add("Login");
+        listMenuItem.add("Request");
+        listMenuItem.add("Info");
+        listMenuItem.add("Contact Us");
+
+        listIcon = new ArrayList<Integer>();
+        listIcon.add(R.drawable.channel1);
+        listIcon.add(R.drawable.channel2);
+        listIcon.add(R.drawable.hits);
+        listIcon.add(R.drawable.archive);
+        listIcon.add(R.drawable.call);
+        listIcon.add(R.drawable.play);
+        listIcon.add(R.drawable.jhhjh);
+        listIcon.add(R.drawable.jhhjh);
+        listIcon.add(R.drawable.info);
+        listIcon.add(R.drawable.jhhjh);
+    }
+
 
     public void onDrawerSlide(float slideOffset) {
 
@@ -121,11 +183,13 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
 
     public void onDrawerItemClicked(int index) {
-        if (index == 2) {
-            startActivity(new Intent(this, SignIn.class));
+        if (index == 1) {
+            finish();
+            startActivity(new Intent(this, ProfileActivity.class));
         } else {
             //mPager.setCurrentItem(index);
-            startActivity(new Intent(this, SignIn.class));
+            finish();
+            startActivity(new Intent(this, StartActivity.class));
         }
     }
 
@@ -231,6 +295,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onClick(View view) {
+
+
+
+
+        /*
         if (view == play) {
             try {
                 mPlayer.reset();
@@ -265,6 +334,9 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(this, SignIn.class);
             startActivity(intent);
         }
+*/
+
+
 
 
     }

@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container_app_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="radio.buetian.org.buetradio.PlayerActivity">
+
+    <include
+        android:id="@+id/app_bar"
+        layout="@layout/app_bar" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:id="@+id/linearLayout">
+
+
+            <ImageButton
+                android:id="@+id/bRecord"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/record"
+                android:layout_weight="0.33"/>
+
+            <ImageButton
+                android:id="@+id/bPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/pause"
+                android:layout_weight="0.33"/>
+
+            <ImageButton
+                android:id="@+id/bStop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:src="@drawable/stop"
+                android:layout_weight="0.33"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:text=".....Playing....."
+            android:id="@+id/tplaying"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#e46868"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=".....Recording....."
+            android:id="@+id/tRecording"
+            android:textColor="#e46868"
+            android:textStyle="bold"
+            android:textSize="18dp"
+            android:layout_above="@+id/linearLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp" />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bCall"
+            android:src="@drawable/call"
+            android:layout_below="@+id/tplaying"
+            android:layout_toEndOf="@+id/bSms"
+            android:layout_toRightOf="@+id/bSms" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Call Us"
+            android:layout_alignTop="@+id/bCall"
+            android:layout_alignRight="@+id/tplaying"
+            android:layout_marginRight="60dp"
+            android:layout_marginEnd="33dp"
+            android:id="@+id/tCall"
+            android:layout_marginTop="30sp" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:lines="3"
+            android:ems="10"
+            android:id="@+id/eSms"
+            android:layout_below="@+id/bCall"
+            android:layout_centerHorizontal="true"
+            android:hint= "Send Us SMS with Name,Batch,Dept,Your message and Press Send" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Send"
+            android:id="@+id/bSms"
+            android:layout_below="@+id/eSms"
+            android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/bSms"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chat Room"
+                android:id="@+id/bChat"
+                android:layout_weight="0.33" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Request"
+                android:singleLine="true"
+                android:id="@+id/bRequest"
+                android:layout_weight="0.33" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Record Directory"
+                android:layout_weight="0.33"
+                android:id="@+id/bDir" />
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
+
