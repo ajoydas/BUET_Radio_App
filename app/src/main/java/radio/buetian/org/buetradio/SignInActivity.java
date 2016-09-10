@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
@@ -32,7 +33,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 import com.facebook.FacebookSdk;
 
-public class SignIn extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
+public class SignInActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
     private static final int RC_SIGN_IN = 1;
     private SignInButton signInButton;
     private GoogleApiClient mGoogleApiClient;
@@ -40,12 +41,17 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
     private FirebaseAuth.AuthStateListener mAuthListener;
     private LoginButton loginButton;
     private CallbackManager callbackManager;
-
+    private Toolbar mToolbar;
+    String redirect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(mToolbar);
+
+        redirect=getIntent().getExtras().getString("From");
 
 /*        FacebookSdk.sdkInitialize(this.getApplicationContext());
 
@@ -58,7 +64,7 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
             @Override
             public void onSuccess(LoginResult loginResult) {
                 // App code
-                Toast.makeText(SignIn.this, "Login Successfull!",
+                Toast.makeText(SignInActivity.this, "Login Successfull!",
                         Toast.LENGTH_LONG).show();
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
@@ -89,9 +95,20 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
 
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if(firebaseAuth.getCurrentUser()!=null)
-                {
-                    startActivity(new Intent(SignIn.this,ProfileActivity.class));
+                if(firebaseAuth.getCurrentUser()!=null) {
+                    if (redirect.equals("Signin")||redirect.equals("Profile")) {
+                        finish();
+                        startActivity(new Intent(SignInActivity.this, ProfileActivity.class));
+                    }
+                    else if (redirect.equals("Chatroom")) {
+                        finish();
+                        startActivity(new Intent(SignInActivity.this, ChatActivity.class));
+                    }
+                    else if (redirect.equals("Request")) {
+                        finish();
+                        startActivity(new Intent(SignInActivity.this, RequestActivity.class));
+                    }
+
                 }
             }
         };
@@ -106,7 +123,7 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(SignIn.this, "Authentication Some failure",
+                        Toast.makeText(SignInActivity.this, "Authentication Some failure",
                                 Toast.LENGTH_SHORT).show();
                     }
                 })
@@ -174,18 +191,33 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
 
-                            Toast.makeText(SignIn.this, "Authentication failed.",
+                            Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
 
                         } else {
 
-                            Toast.makeText(SignIn.this, "Login Successful.",
+                            Toast.makeText(SignInActivity.this, "Login Successful.",
                                     Toast.LENGTH_SHORT).show();
 
                             // Enter your code after the Sign In complete
                             if(mAuth.getCurrentUser()!=null)
                             {
-                                startActivity(new Intent(SignIn.this,ProfileActivity.class));
+                                //startActivity(new Intent(SignInActivity.this,ProfileActivity.class));
+                                if(mAuth.getCurrentUser()!=null) {
+                                    if (redirect.equals("Signin")||redirect.equals("Profile")) {
+                                        finish();
+                                        startActivity(new Intent(SignInActivity.this, ProfileActivity.class));
+                                    }
+                                    else if (redirect.equals("Chatroom")) {
+                                        finish();
+                                        startActivity(new Intent(SignInActivity.this, ChatActivity.class));
+                                    }
+                                    else if (redirect.equals("Request")) {
+                                        finish();
+                                        startActivity(new Intent(SignInActivity.this, RequestActivity.class));
+                                    }
+
+                                }
                             }
 
                         }
@@ -219,14 +251,14 @@ public class SignIn extends AppCompatActivity implements MainFragment.OnFragment
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
-                            Toast.makeText(SignIn.this, "Authentication failed.",
+                            Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
-                            Toast.makeText(SignIn.this, "Authentication Successfull.",
+                            Toast.makeText(SignInActivity.this, "Authentication Successfull.",
                                     Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignIn.this,ProfileActivity.class));
+                            startActivity(new Intent(SignInActivity.this,ProfileActivity.class));
 
                         }
                         // ...

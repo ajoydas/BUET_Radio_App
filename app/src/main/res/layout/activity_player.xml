@@ -129,7 +129,7 @@
                 android:layout_height="wrap_content"
                 android:text="Chat Room"
                 android:id="@+id/bChat"
-                android:layout_weight="0.33" />
+                android:layout_weight="0.5" />
 
             <Button
                 android:layout_width="wrap_content"
@@ -137,14 +137,8 @@
                 android:text="Request"
                 android:singleLine="true"
                 android:id="@+id/bRequest"
-                android:layout_weight="0.33" />
+                android:layout_weight="0.5" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Record Directory"
-                android:layout_weight="0.33"
-                android:id="@+id/bDir" />
         </LinearLayout>
 
     </RelativeLayout>

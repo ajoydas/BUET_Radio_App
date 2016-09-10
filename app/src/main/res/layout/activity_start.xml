@@ -11,61 +11,65 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <include
             android:id="@+id/app_bar"
             layout="@layout/app_bar" />
-<!--
-            <Button
-                android:id="@+id/bPlay"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@+id/bStop"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/bStop"
-                android:layout_marginTop="119dp"
-                android:text="Play" />
 
-            <Button
-                android:id="@+id/bStop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="Stop" />
+        <!--
+                    <Button
+                        android:id="@+id/bPlay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/bStop"
+                        android:layout_alignParentTop="true"
+                        android:layout_alignStart="@+id/bStop"
+                        android:layout_marginTop="119dp"
+                        android:text="Play" />
 
-            <Button
-                android:id="@+id/bRecord"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/bPlay"
-                android:layout_centerHorizontal="true"
-                android:text="Record" />
+                    <Button
+                        android:id="@+id/bStop"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="Stop" />
 
-            <Button
-                android:id="@+id/bSignup"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/bSignin"
-                android:layout_centerHorizontal="true"
-                android:text="Sign Up" />
+                    <Button
+                        android:id="@+id/bRecord"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/bPlay"
+                        android:layout_centerHorizontal="true"
+                        android:text="Record" />
 
-            <Button
-                android:id="@+id/bSignin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:text="Sign In" />
--->
+                    <Button
+                        android:id="@+id/bSignup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/bSignin"
+                        android:layout_centerHorizontal="true"
+                        android:text="Sign Up" />
 
-                <GridView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/gridView"
-                    android:clickable="true"
-                    android:numColumns="2"
-                    android:smoothScrollbar="true" />
+                    <Button
+                        android:id="@+id/bSignin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:text="Sign In" />
+        -->
+
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:numColumns="2"
+            android:smoothScrollbar="true" />
+
     </LinearLayout>
+
     <fragment
         android:id="@+id/fragment_navigation_drawer"
         android:name="radio.buetian.org.buetradio.FragmentDrawer"

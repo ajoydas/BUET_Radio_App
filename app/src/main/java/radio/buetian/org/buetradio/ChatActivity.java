@@ -1,6 +1,7 @@
 package radio.buetian.org.buetradio;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -45,12 +47,15 @@ public class ChatActivity extends AppCompatActivity {
     private String profilePic;
     private ProgressDialog progressDialog;
     private ListView listView;
+    private Toolbar mToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        profilePic=getIntent().getExtras().getString("Photo");
+        //profilePic=getIntent().getExtras().getString("Photo");
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(mToolbar);
         int flag=0;
         mAuth=FirebaseAuth.getInstance();
 
@@ -60,7 +65,7 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder> adapter;
 
-        ref = new Firebase("https://buetradio-865f1.firebaseio.com/chat");
+        ref = new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
         //Query query=new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
         listView = (ListView) findViewById(R.id.chatList);
         ListAdapter ladapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, ref)
@@ -69,11 +74,11 @@ public class ChatActivity extends AppCompatActivity {
             protected void populateView(View view, ChatMessage chatMessage, int i) {
                 TextView nameText = (TextView) view.findViewById(R.id.user);
                 TextView messageText = (TextView) view.findViewById(R.id.message);
-                ImageView photo = (ImageView) view.findViewById(R.id.iPhoto);
+                //ImageView photo = (ImageView) view.findViewById(R.id.iPhoto);
                 nameText.setText(chatMessage.getUser());
                 messageText.setText(chatMessage.getMessage());
                 //chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
-                photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
+                //photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
             }
         };
         listView.setAdapter(ladapter);
@@ -85,9 +90,9 @@ public class ChatActivity extends AppCompatActivity {
         //linearLayoutManager.setStackFromEnd(true);
         recycler.setLayoutManager(linearLayoutManager);*/
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
-        StrictMode.setThreadPolicy(policy);
+        //StrictMode.setThreadPolicy(policy);
 
 
 /*        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(ChatMessage.class, R.layout.message,ChatMessageViewHolder.class,ref) {
@@ -110,7 +115,7 @@ public class ChatActivity extends AppCompatActivity {
                 ChatMessage chat=new ChatMessage();
                 chat.setUser(mAuth.getCurrentUser().getDisplayName());
                 chat.setMessage(write.getText().toString());
-                chat.setPhotoUrl(mAuth.getCurrentUser().getPhotoUrl().toString());
+                //chat.setPhotoUrl(mAuth.getCurrentUser().getPhotoUrl().toString());
                 ref.push().setValue(chat);
             }
         });
@@ -171,13 +176,13 @@ public class ChatActivity extends AppCompatActivity {
     private static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView nameText;
-        ImageView photo;
+        //ImageView photo;
 
         public ChatMessageViewHolder(View itemView) {
             super(itemView);
             nameText = (TextView)itemView.findViewById(R.id.user);
             messageText = (TextView) itemView.findViewById(R.id.message);
-            photo= (ImageView) itemView.findViewById(R.id.iPhoto);
+           // photo= (ImageView) itemView.findViewById(R.id.iPhoto);
         }
     }
 
@@ -200,5 +205,12 @@ public class ChatActivity extends AppCompatActivity {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        startActivity(new Intent(ChatActivity.this,StartActivity.class));
     }
 }

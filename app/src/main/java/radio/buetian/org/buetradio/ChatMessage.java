@@ -6,7 +6,7 @@ package radio.buetian.org.buetradio;
 public class ChatMessage {
     private String user;
     private String message;
-    private String photoUrl;
+    //private String photoUrl;
 
     public String getUser() {
         return user;
@@ -24,11 +24,11 @@ public class ChatMessage {
         this.message = message;
     }
 
-    public String getPhotoUrl() {
+    /*public String getPhotoUrl() {
         return photoUrl;
     }
 
     public void setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
-    }
+    }*/
 }

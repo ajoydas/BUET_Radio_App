@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
 import android.widget.Button;
@@ -29,12 +30,16 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
     Button logout,chat;
     FirebaseAuth firebase;
     private Bitmap bm;
+    private Toolbar mToolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+        setSupportActionBar(mToolbar);
+
         name = (TextView) findViewById(R.id.tName);
         email = (TextView) findViewById(R.id.tEmail);
         imageView = (ImageView) findViewById(R.id.image);
@@ -113,13 +118,14 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
         if(view==logout)
         {
             firebase.signOut();
+            Intent intent=new Intent(this,SignInActivity.class);
+            intent.putExtra("From","Signin");
             finish();
-            startActivity(new Intent(this,SignIn.class));
+            startActivity(intent);
         }
         if(view==chat)
         {
             Intent intent=new Intent(this,ChatActivity.class);
-            intent.putExtra("Photo",getStringImage(bm));
             finish();
             startActivity(intent);
         }

@@ -22,6 +22,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         {
             String message = remoteMessage.getData().get("Message");
             Bundle bundle = new Bundle();
+            bundle.putString("From","Notification");
             bundle.putString("Message",message);
             intent.putExtras(bundle);
         }

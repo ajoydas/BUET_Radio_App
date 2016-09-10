@@ -1,20 +1,33 @@
 package radio.buetian.org.buetradio;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.facebook.internal.Utility;
+import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -48,11 +61,29 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
 
     private GridView gridView;
 
+    FirebaseAuth mAuth;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        //Redirect to notification
+        try {
+            if (getIntent().getExtras().getString("Message") != null) {
+                Intent intent = new Intent(this, NotificationActivity.class);
+                intent.putExtra("From","Notification");
+                intent.putExtra("Message", getIntent().getExtras().getString("Message"));
+                finish();
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+        mAuth = FirebaseAuth.getInstance();
         setupDrawer();
 
         prepareList();
@@ -63,6 +94,20 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         // Set custom adapter to gridview
         gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(mAdapter);
+        /*
+        stopPlayer= (Button) findViewById(R.id.bStopAll);
+
+        stopPlayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), StartActivity.class);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
+        */
 
         // Implement On Item click listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -75,19 +120,145 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
                     intent.putExtra("Stream","http://87.117.217.103:38164");
-                    finish();
+                    intent.putExtra("Player","Channel 1");
+                    //finish();
                     startActivity(intent);
                 }
                 else if(position==1)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
                     intent.putExtra("Stream","http://87.117.217.103:38164");
-                    finish();
+                    intent.putExtra("Player","Channel 2");
+                    //finish();
                     startActivity(intent);
+                }
+                else if(position==2)
+                {
+                    Intent intent=new Intent(StartActivity.this,WebLoad.class);
+                    intent.putExtra("Url","https://soundcloud.com/buet-radio");
+                    //finish();
+                    startActivity(intent);
+                }
+                else if(position==3)
+                {
+                    Intent intent=new Intent(StartActivity.this,WebLoad.class);
+                    intent.putExtra("Url","http://buetradio.com/archive.html");
+                    //finish();
+                    startActivity(intent);
+                }
+                else if (position==4)
+                {
+                    if(mAuth.getCurrentUser()!=null)
+                    {
+                        Intent intent=new Intent(StartActivity.this,ChatActivity.class);
+                        //finish();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                        intent.putExtra("From","Chatroom");
+                        //finish();
+                        startActivity(intent);
+                    }
+                }
+                else if (position==5)
+                {
+                    Intent intent=new Intent(StartActivity.this,NotificationActivity.class);
+                    intent.putExtra("From","Events");
+                    //finish();
+                    startActivity(intent);
+                }
+                else if (position==6)
+                {
+                    if(mAuth.getCurrentUser()!=null)
+                    {
+                        Intent intent=new Intent(StartActivity.this,ProfileActivity.class);
+                        //finish();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                        intent.putExtra("From","Signin");
+                        //finish();
+                        startActivity(intent);
+                    }
+                }
+                else if (position==7)
+                {
+                    if(mAuth.getCurrentUser()!=null)
+                    {
+                        Intent intent=new Intent(StartActivity.this,RequestActivity.class);
+                        //finish();
+                        startActivity(intent);
+                    }
+                    else
+                    {
+                        Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                        intent.putExtra("From","Request");
+                        //finish();
+                        startActivity(intent);
+                    }
+                }
+                else if (position==8)
+                {
+                    Intent intent=new Intent(StartActivity.this,NotificationActivity.class);
+                    intent.putExtra("From","Info");
+                    //finish();
+                    startActivity(intent);
+                }
+                else if (position==9)
+                {
+                    final CharSequence[] items = { "Call Us", "Email Us",
+                            "Cancel" };
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
+                    builder.setTitle("Contact Us!");
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (items[item].equals("Call Us")) {
+                                //System.out.println("Call us clicked");
+                                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                callIntent.setData(Uri.parse("tel:01834855306"));
+                                try {
+                                    startActivity(callIntent);
+                                }
+                                catch (Exception e)
+                                {
+                                    Toast.makeText(StartActivity.this,"Call Permission Denied!",Toast.LENGTH_SHORT).show();
+                                }
+                            } else if (items[item].equals("Email Us")) {
+                                //System.out.println("Email us clicked");
+                                Intent i = new Intent(Intent.ACTION_SEND);
+                                i.setType("message/rfc822");
+                                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"1405079.ad@ugrad.cse.buet.ac.bd"});
+                                i.putExtra(Intent.EXTRA_SUBJECT, "Contact");
+                                i.putExtra(Intent.EXTRA_TEXT   , "Please write here");
+                                try {
+                                    startActivity(Intent.createChooser(i, "Send mail..."));
+                                } catch (android.content.ActivityNotFoundException ex) {
+                                    Toast.makeText(StartActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+                                }
+
+                            } else if (items[item].equals("Cancel")) {
+                                dialog.dismiss();
+                            }
+                        }
+                    });
+                    builder.show();
                 }
 
             }
         });
+
+
+        PhoneCallListener phoneListener = new PhoneCallListener();
+        TelephonyManager telephonyManager = (TelephonyManager) this
+                .getSystemService(Context.TELEPHONY_SERVICE);
+        telephonyManager.listen(phoneListener,
+                PhoneStateListener.LISTEN_CALL_STATE);
 
         //animate the Toolbar when it comes into the picture
         //AnimationUtils.animateToolbarDroppingDown(mContainerToolbar);
@@ -121,19 +292,11 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         record.setOnClickListener(this);
         signin.setOnClickListener(this);
 
-        try {
-            if (getIntent().getExtras().getString("Message") != null) {
-                Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("Message", getIntent().getExtras().getString("Message"));
-                finish();
-                startActivity(intent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
 */
 
     }
+
 
     public void prepareList() {
         listMenuItem = new ArrayList<String>();
@@ -331,13 +494,54 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
         }
 
         if (view == signin) {
-            Intent intent = new Intent(this, SignIn.class);
+            Intent intent = new Intent(this, SignInActivity.class);
             startActivity(intent);
         }
 */
-
-
-
-
     }
+    private class PhoneCallListener extends PhoneStateListener {
+
+        private boolean isPhoneCalling = false;
+
+        String LOG_TAG = "LOGGING 123";
+
+        @Override
+        public void onCallStateChanged(int state, String incomingNumber) {
+
+            if (TelephonyManager.CALL_STATE_RINGING == state) {
+                // phone ringing
+                Log.i(LOG_TAG, "RINGING, number: " + incomingNumber);
+            }
+
+            if (TelephonyManager.CALL_STATE_OFFHOOK == state) {
+                // active
+                Log.i(LOG_TAG, "OFFHOOK");
+
+                isPhoneCalling = true;
+            }
+
+            if (TelephonyManager.CALL_STATE_IDLE == state) {
+                // run when class initial and phone call ended, need detect flag
+                // from CALL_STATE_OFFHOOK
+                Log.i(LOG_TAG, "IDLE");
+
+                if (isPhoneCalling) {
+
+                    Log.i(LOG_TAG, "restart app");
+
+                    // restart app
+                    Intent i = getBaseContext().getPackageManager()
+                            .getLaunchIntentForPackage(
+                                    getBaseContext().getPackageName());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(i);
+
+                    isPhoneCalling = false;
+                }
+
+            }
+        }
+    }
+
+
 }

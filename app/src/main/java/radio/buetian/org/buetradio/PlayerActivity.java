@@ -25,17 +25,23 @@ import java.io.File;
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
     ImageButton play,stop,record,call;
-    Button directory,sendsms;
+    //Button directory;
+    Button sendsms;
     boolean isPlaying= false;
     boolean isRecording= false;
     TextView tplaying,trecording,tcall;
     private Toolbar mToolbar;
     EditText textSMS;
 
+    String channel;
+    String stream_url;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
+        stream_url=getIntent().getExtras().getString("Stream");
+        channel=getIntent().getExtras().getString("Player");
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
 
@@ -43,7 +49,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         stop= (ImageButton) findViewById(R.id.bStop);
         record= (ImageButton) findViewById(R.id.bRecord);
         call= (ImageButton) findViewById(R.id.bCall);
-        directory= (Button) findViewById(R.id.bDir);
+        //directory= (Button) findViewById(R.id.bDir);
         sendsms= (Button) findViewById(R.id.bSms);
         textSMS= (EditText) findViewById(R.id.eSms);
         tplaying= (TextView) findViewById(R.id.tplaying);
@@ -52,12 +58,14 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         tplaying.setVisibility(View.INVISIBLE);
         trecording.setVisibility(View.INVISIBLE);
 
+        tplaying.setText("......Playing "+channel+"......");
+        trecording.setText("......Recording "+channel+"......");
         play.setOnClickListener(this);
         stop.setOnClickListener(this);
         record.setOnClickListener(this);
         call.setOnClickListener(this);
         tcall.setOnClickListener(this);
-        directory.setOnClickListener(this);
+        //directory.setOnClickListener(this);
         sendsms.setOnClickListener(this);
 
         // add PhoneStateListener
@@ -144,10 +152,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-
+/*
         if(view==directory)
         {
-            /*Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/BuetRadioRecord/");
+            *//*Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/BuetRadioRecord/");
             Intent intent = new Intent(Intent.ACTION_VIEW);
             intent.setDataAndType(selectedUri, "resource/folder");
 
@@ -160,15 +168,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 // if you reach this place, it means there is no any file
                 // explorer app installed on your device
 
-            }*/
+            }*//*
 
             if(createDirIfNotExists("BuetRadioRecords"))
             {
-                /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                *//*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
                         + "/BuetRadioRecord/");
                 intent.setDataAndType(uri, "text/csv");
-                startActivity(Intent.createChooser(intent, "Open folder"));*/
+                startActivity(Intent.createChooser(intent, "Open folder"));*//*
                 Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/BuetRadioRecord/");
                 Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setDataAndType(selectedUri, "text/csv");
@@ -186,7 +194,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 Toast.makeText(this,"The directory can't be created.",Toast.LENGTH_SHORT).show();
             }
 
-        }
+        }*/
     }
 
     public static boolean createDirIfNotExists(String path) {
