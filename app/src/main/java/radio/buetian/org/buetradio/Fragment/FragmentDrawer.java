@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,10 +14,15 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import radio.buetian.org.buetradio.Activity.StartActivity;
+import radio.buetian.org.buetradio.Adapter.AdapterDrawer;
+import radio.buetian.org.buetradio.Application.BUETRadio;
+import radio.buetian.org.buetradio.Objects.Information;
+import radio.buetian.org.buetradio.R;
 
 /**
  * Created by ajoy on 9/7/16.

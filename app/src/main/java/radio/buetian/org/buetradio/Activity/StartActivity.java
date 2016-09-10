@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -6,10 +6,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.v4.content.IntentCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,21 +21,17 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.facebook.internal.Utility;
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import radio.buetian.org.buetradio.Adapter.GridviewAdapter;
+import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
+import radio.buetian.org.buetradio.R;
 
-public class StartActivity extends AppCompatActivity implements View.OnClickListener {
+public class StartActivity extends AppCompatActivity {
 
     private Button play, stop, record, signin, signup;
     private MediaPlayer mPlayer;
@@ -357,148 +349,6 @@ public class StartActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    private class Recording extends AsyncTask {
-
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-
-
-            try {
-                OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(stream_url)
-                        .build();
-
-                Response response = client.newCall(request).execute();
-                inputStream = response.body().byteStream();
-                isRecording = true;
-
-                startTime = System.currentTimeMillis();
-
-                Boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-
-                String fileName = File.separator + "radio_" + "recording_" + System.currentTimeMillis();
-
-                if (isSDPresent) {
-                    outputSource = Environment.getExternalStorageDirectory() + fileName;
-
-                } else {
-                    outputSource = Environment.getDataDirectory() + fileName;
-                }
-
-                String contentType = "audio/mpeg";
-
-                if (contentType.equals("audio/aacp"))
-                    fileOutputStream = new FileOutputStream(outputSource + ".acc");
-                else if (contentType.equals("audio/mpeg"))
-                    fileOutputStream = new FileOutputStream(outputSource + ".mp3");
-                else
-                    fileOutputStream = new FileOutputStream(outputSource + ".nieznany_format");
-                int c;
-
-                while ((c = inputStream.read()) != -1 && isRecording) {
-
-                    fileOutputStream.write(c);
-                }
-                /*int bytesRead = 0;
-                int bytes;
-                while (((bytes = inputStream.read()) != -1) && isRecording) {
-
-                    fileOutputStream.write(bytes);
-                    bytesRead++;
-
-                    stopTime = System.currentTimeMillis();
-
-                    long seconds = (Math.abs(startTime-stopTime));
-                    int minutes = 1000 * 60 * 60;
-
-                    if(minutes<=seconds)
-                    {
-                        Log.d("xxx", "recording task exceed stopped");
-                        break;
-                    }
-                }*/
-                System.out.println("Closed Recording.......");
-                inputStream.close();
-                fileOutputStream.close();
-                return null;
-
-            } catch (IOException e) {
-                e.printStackTrace();
-                isRecording = false;
-            }
-
-            isRecording = false;
-            return null;
-
-
-
-
-
-            /*URL url = null;
-            try {
-                url = new URL(stream_url);
-                inputStream = url.openStream();
-                fileOutputStream = new FileOutputStream(outputSource);
-                int c;
-
-                while ((c = inputStream.read()) != -1) {
-                    fileOutputStream.write(c);
-                }
-                fileOutputStream.close();
-            } catch (IOException e) {
-                System.out.println("Can't Record.");
-                e.printStackTrace();
-            }*/
-
-
-        }
-    }
-
-    @Override
-    public void onClick(View view) {
-
-
-
-
-        /*
-        if (view == play) {
-            try {
-                mPlayer.reset();
-                mPlayer.setDataSource(stream_url);
-                mPlayer.prepareAsync();
-
-                mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                    @Override
-                    public void onPrepared(MediaPlayer mediaPlayer) {
-                        mPlayer.start();
-                    }
-                });
-
-            } catch (IOException e) {
-                Toast.makeText(this, "Couldn't Connect", Toast.LENGTH_LONG).show();
-                e.printStackTrace();
-            }
-
-        }
-        if (view == stop) {
-            mPlayer.stop();
-
-            isRecording = false;
-
-        }
-
-        if (view == record) {
-            new Recording().execute();
-        }
-
-        if (view == signin) {
-            Intent intent = new Intent(this, SignInActivity.class);
-            startActivity(intent);
-        }
-*/
-    }
     private class PhoneCallListener extends PhoneStateListener {
 
         private boolean isPhoneCalling = false;

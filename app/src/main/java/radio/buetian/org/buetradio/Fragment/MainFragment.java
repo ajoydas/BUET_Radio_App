@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Fragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +26,10 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
+
+import radio.buetian.org.buetradio.Activity.ProfileActivity;
+import radio.buetian.org.buetradio.Application.BUETRadio;
+import radio.buetian.org.buetradio.R;
 
 
 /**

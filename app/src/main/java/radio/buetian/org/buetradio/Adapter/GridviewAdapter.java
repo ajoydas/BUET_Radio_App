@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Adapter;
 
 import java.util.ArrayList;
 
@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import radio.buetian.org.buetradio.R;
 
 public class GridviewAdapter extends BaseAdapter
 {

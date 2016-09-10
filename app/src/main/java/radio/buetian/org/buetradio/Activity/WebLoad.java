@@ -1,10 +1,8 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Activity;
 
-import android.app.DownloadManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,6 +11,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import radio.buetian.org.buetradio.Application.BUETRadio;
+import radio.buetian.org.buetradio.R;
 
 public class WebLoad extends AppCompatActivity {
     protected FrameLayout webViewPlaceholder;

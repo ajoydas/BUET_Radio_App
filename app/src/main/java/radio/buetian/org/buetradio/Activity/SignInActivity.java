@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -9,12 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -26,12 +21,11 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import com.facebook.FacebookSdk;
+import radio.buetian.org.buetradio.Fragment.MainFragment;
+import radio.buetian.org.buetradio.R;
 
 public class SignInActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
     private static final int RC_SIGN_IN = 1;

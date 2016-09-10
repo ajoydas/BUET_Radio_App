@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="radio.buetian.org.buetradio.WebLoad">
+    tools:context=".Activity.WebLoad">
 
     <include
         android:id="@+id/app_bar"

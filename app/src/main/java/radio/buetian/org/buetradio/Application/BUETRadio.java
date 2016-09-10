@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Application;
 
 import android.content.Context;
 import android.content.SharedPreferences;

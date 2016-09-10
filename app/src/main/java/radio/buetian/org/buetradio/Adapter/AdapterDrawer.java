@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,9 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.pkmmte.view.CircularImageView;
 
@@ -25,6 +23,9 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
+
+import radio.buetian.org.buetradio.Objects.Information;
+import radio.buetian.org.buetradio.R;
 
 
 public class AdapterDrawer extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

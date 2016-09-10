@@ -1,4 +1,4 @@
-package radio.buetian.org.buetradio;
+package radio.buetian.org.buetradio.Services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +9,9 @@ import android.support.v4.app.NotificationCompat;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import radio.buetian.org.buetradio.Activity.NotificationActivity;
+import radio.buetian.org.buetradio.R;
 
 /**
  * Created by ajoy on 9/4/16.
