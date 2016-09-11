@@ -1,5 +1,7 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -11,6 +13,7 @@ import android.os.Environment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.SmsManager;
@@ -22,9 +25,11 @@ import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.phenotype.Flag;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.File;
@@ -36,6 +41,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import radio.buetian.org.buetradio.Objects.PlayerConnection;
 import radio.buetian.org.buetradio.R;
+import radio.buetian.org.buetradio.Services.MyNotification;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -65,6 +71,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             PlayerConnection.getMediaPlayer().stop();
             PlayerConnection.setIsRecording(false);
             PlayerConnection.setChannel(channel);
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
         }
 
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -137,6 +145,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 PhoneStateListener.LISTEN_CALL_STATE);
     }
 
+    public void showNotification(){
+        new MyNotification(this);
+        //finish();
+    }
     @Override
     public void onClick(View view) {
         if (view == play) {
@@ -151,6 +163,29 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                         @Override
                         public void onPrepared(MediaPlayer mediaPlayer) {
                             PlayerConnection.getMediaPlayer().start();
+
+                            //showNotification();
+                            Context ctx;
+                            ctx=PlayerActivity.this;
+                            RemoteViews contentView=new RemoteViews(ctx.getPackageName(), R.layout.messageview);
+                            contentView.setTextViewText(R.id.tChannel,"Playing "+PlayerConnection.getChannel());
+                            Intent notificationIntent = new Intent(PlayerActivity.this, HelperActivity.class);
+                            PendingIntent contentIntent = PendingIntent.getActivity(PlayerActivity.this, 4, notificationIntent, 0);
+                            contentView.setOnClickPendingIntent(R.id.btn1,contentIntent);
+
+                            long when = System.currentTimeMillis();
+                            android.support.v4.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PlayerActivity.this)
+                                    .setSmallIcon(R.drawable.icon)
+                                    .setContent(contentView)
+                                    .setContentTitle("Buet Radio Online Stream")
+                                    .setWhen(when)
+                                    .setOngoing(true);
+
+                            NotificationManager mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                            mNotificationManager.notify(1, notificationBuilder.build());
+
+
+
                             progressDialog.dismiss();
                             play.setImageResource(R.drawable.play);
                             tplaying.setVisibility(View.VISIBLE);
@@ -167,6 +202,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
                 PlayerConnection.getMediaPlayer().stop();
 
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.cancelAll();
                 play.setImageResource(R.drawable.pause);
                 tplaying.clearAnimation();
                 tplaying.setVisibility(View.INVISIBLE);
@@ -188,6 +225,9 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         if (view == stop) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+
             PlayerConnection.getMediaPlayer().stop();
             PlayerConnection.setIsRecording(false);
             play.setImageResource(R.drawable.pause);

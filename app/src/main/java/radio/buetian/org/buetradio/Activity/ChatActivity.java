@@ -1,8 +1,10 @@
 package radio.buetian.org.buetradio.Activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -204,6 +206,8 @@ public class ChatActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        finish();
+        Intent intent=new Intent(this,StartActivity.class);
+        startActivity(intent);
+
     }
 }

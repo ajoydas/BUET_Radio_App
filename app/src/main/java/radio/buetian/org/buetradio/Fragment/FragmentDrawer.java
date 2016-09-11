@@ -44,7 +44,7 @@ public class FragmentDrawer extends Fragment{
     public List<Information> getData() {
 
         List<Information> data = new ArrayList<>();
-        int[] icons = {R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter};
+        int[] icons = {R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter,R.drawable.ic_twitter};
         String[] titles = getResources().getStringArray(R.array.drawer_tabs);
         for (int i = 0; i < titles.length; i++) {
             Information information = new Information();

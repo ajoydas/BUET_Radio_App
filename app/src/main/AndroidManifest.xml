@@ -66,6 +66,7 @@
             android:label="BUET Radio Rewind"></activity>
         <activity android:name=".Activity.RequestActivity"
             android:label="BUET RADIO Request"></activity>
+        <activity android:name=".Activity.HelperActivity"/>
     </application>
 
 </manifest>

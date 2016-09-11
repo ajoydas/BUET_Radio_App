@@ -3,6 +3,7 @@ package radio.buetian.org.buetradio.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -260,6 +261,12 @@ public class SignInActivity extends AppCompatActivity implements MainFragment.On
                 });
     }*/
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent=new Intent(this,StartActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK );
+        finish();
+        startActivity(intent);
+    }
 }

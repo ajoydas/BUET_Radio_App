@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="drawer_tabs">
-        <item>Running Fairs</item>
-        <item>Upcoming Fairs</item>
-        <item>About</item>
+        <item>Profile</item>
+        <item>Channel 1</item>
+        <item>Channel 2</item>
+        <item>Radio Hits</item>
+        <item>Archive</item>
+        <item>ChatRoom</item>
+        <item>Request</item>
+        <item>Check for Update</item>
     </string-array>
 </resources>

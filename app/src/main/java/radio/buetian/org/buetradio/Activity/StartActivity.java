@@ -338,13 +338,90 @@ public class StartActivity extends AppCompatActivity {
 
 
     public void onDrawerItemClicked(int index) {
-        if (index == 1) {
-            finish();
-            startActivity(new Intent(this, ProfileActivity.class));
-        } else {
-            //mPager.setCurrentItem(index);
-            finish();
-            startActivity(new Intent(this, StartActivity.class));
+        if (index == 0) {
+
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(StartActivity.this,ProfileActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                intent.putExtra("From","Signin");
+                //finish();
+                startActivity(intent);
+            }
+        }else if(index==1)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 1");
+            //finish();
+            startActivity(intent);
+        }
+        else if(index==2)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 2");
+            //finish();
+            startActivity(intent);
+        }
+        else if(index==3)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","https://soundcloud.com/buet-radio");
+            //finish();
+            startActivity(intent);
+        }
+        else if(index==4)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","http://buetradio.com/archive.html");
+            //finish();
+            startActivity(intent);
+        }
+        else if (index==5)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(StartActivity.this,ChatActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                intent.putExtra("From","Chatroom");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==6)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(StartActivity.this,RequestActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                intent.putExtra("From","Request");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==7)
+        {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            }
         }
     }
 
