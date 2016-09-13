@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import radio.buetian.org.buetradio.Activity.PlayerActivity;
 import radio.buetian.org.buetradio.Activity.StartActivity;
 import radio.buetian.org.buetradio.Adapter.AdapterDrawer;
 import radio.buetian.org.buetradio.Application.BUETRadio;
@@ -25,9 +26,9 @@ import radio.buetian.org.buetradio.Objects.Information;
 import radio.buetian.org.buetradio.R;
 
 /**
- * Created by ajoy on 9/7/16.
+ * Created by ajoy on 9/11/16.
  */
-public class FragmentDrawer extends Fragment{
+public class FragmentDrawerPlayer extends Fragment {
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
     private RecyclerView mRecyclerDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -38,7 +39,7 @@ public class FragmentDrawer extends Fragment{
     private View mContainer;
     private boolean mDrawerOpened = false;
 
-    public FragmentDrawer() {
+    public FragmentDrawerPlayer() {
     }
 
     public List<Information> getData() {
@@ -79,7 +80,7 @@ public class FragmentDrawer extends Fragment{
             @Override
             public void onClick(View view, int position) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                ((StartActivity) getActivity()).onDrawerItemClicked(position - 1);
+                ((PlayerActivity) getActivity()).onDrawerItemClicked(position - 1);
             }
 
             @Override
@@ -113,7 +114,7 @@ public class FragmentDrawer extends Fragment{
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                ((StartActivity) getActivity()).onDrawerSlide(slideOffset);
+                ((PlayerActivity) getActivity()).onDrawerSlide(slideOffset);
                 //toolbar.setAlpha(1 - slideOffset / 2);
             }
         };

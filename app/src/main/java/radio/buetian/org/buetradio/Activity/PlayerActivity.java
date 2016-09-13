@@ -1,5 +1,6 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -10,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,8 +22,10 @@ import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -39,6 +43,8 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
+import radio.buetian.org.buetradio.Fragment.FragmentDrawerPlayer;
 import radio.buetian.org.buetradio.Objects.PlayerConnection;
 import radio.buetian.org.buetradio.R;
 import radio.buetian.org.buetradio.Services.MyNotification;
@@ -58,6 +64,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     String stream_url;
     private FirebaseAuth mAuth;
     private ProgressDialog progressDialog;
+    private ViewGroup mContainerToolbar;
+    private FragmentDrawerPlayer mDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +85,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
+        setupDrawer();
+
+       /* View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }*/
+
+
         PlayerConnection.setUi(true);
         play= (ImageButton) findViewById(R.id.bPlay);
         stop= (ImageButton) findViewById(R.id.bStop);
@@ -90,7 +107,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         textSMS= (EditText) findViewById(R.id.eSms);
         tplaying= (TextView) findViewById(R.id.tplaying);
         trecording= (TextView) findViewById(R.id.tRecording);
-        tcall= (TextView) findViewById(R.id.tCall);
+        //tcall= (TextView) findViewById(R.id.tCall);
         tplaying.setText("......Playing "+channel+"......");
         trecording.setText("......Recording "+channel+"......");
 
@@ -121,7 +138,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         stop.setOnClickListener(this);
         record.setOnClickListener(this);
         call.setOnClickListener(this);
-        tcall.setOnClickListener(this);
+        //tcall.setOnClickListener(this);
         //directory.setOnClickListener(this);
         sendsms.setOnClickListener(this);
         chat.setOnClickListener(this);
@@ -137,6 +154,17 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 return true;
             }
         });
+
+        textSMS.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+
         // add PhoneStateListener
         PhoneCallListener phoneListener = new PhoneCallListener();
         TelephonyManager telephonyManager = (TelephonyManager) this
@@ -145,10 +173,31 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 PhoneStateListener.LISTEN_CALL_STATE);
     }
 
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
     public void showNotification(){
         new MyNotification(this);
         //finish();
     }
+
+
+    private void setupDrawer() {
+//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        //set the Toolbar as ActionBar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawerPlayer)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+    }
+
+
     @Override
     public void onClick(View view) {
         if (view == play) {
@@ -236,7 +285,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             trecording.clearAnimation();
             trecording.setVisibility(View.INVISIBLE);
         }
-        if (view == tcall || view == call) {
+        if (view == call) {
 
             if(PlayerConnection.isRecording()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(PlayerActivity.this);
@@ -289,6 +338,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     smsManager.sendTextMessage(phoneNo, null, sms, null, null);
                     Toast.makeText(getApplicationContext(), "SMS Sent!",
                             Toast.LENGTH_LONG).show();
+
+                    textSMS.setText("");
                 } catch (Exception e) {
                     Toast.makeText(getApplicationContext(),
                             "SMS faild, please try again later!",
@@ -560,4 +611,99 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         PlayerConnection.setUi(false);
         finish();
     }
+
+
+    public void onDrawerSlide(float slideOffset) {
+
+    }
+    public void onDrawerItemClicked(int index) {
+        if (index == 0) {
+
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
+                finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Signin");
+                finish();
+                startActivity(intent);
+            }
+        }else if(index==1)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 1");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==2)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 2");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==3)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","https://soundcloud.com/buet-radio");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==4)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","http://buetradio.com/archive.html");
+            finish();
+            startActivity(intent);
+        }
+        else if (index==5)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Chatroom");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==6)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),RequestActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Request");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==7)
+        {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            }
+        }
+    }
+
+
+
 }

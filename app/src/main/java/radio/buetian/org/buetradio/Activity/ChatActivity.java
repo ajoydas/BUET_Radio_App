@@ -1,5 +1,6 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -18,10 +20,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.ui.FirebaseListAdapter;
-import com.firebase.ui.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseListAdapter;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -35,7 +38,8 @@ import radio.buetian.org.buetradio.R;
 
 public class ChatActivity extends AppCompatActivity {
 
-    private Firebase ref;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
     private Button comment;
     private EditText write;
     FirebaseAuth mAuth;
@@ -61,7 +65,10 @@ public class ChatActivity extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder> adapter;
 
-        ref = new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("chatroom");
+
+        //ref = new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
         //Query query=new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
         listView = (ListView) findViewById(R.id.chatList);
         ListAdapter ladapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, ref)
@@ -105,6 +112,17 @@ public class ChatActivity extends AppCompatActivity {
         recycler.setAdapter(adapter);
 
         recycler.scrollToPosition(recycler.getAdapter().getItemCount()-1);*/
+
+        write.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+
         comment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -116,6 +134,14 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
+
+
     Bitmap bm= null;
 
     private Bitmap getImageBitmap(String url) {

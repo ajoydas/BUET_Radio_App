@@ -107,7 +107,7 @@ public class StartActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position,
                                     long arg3) {
-                Toast.makeText(StartActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(StartActivity.this, mAdapter.getItem(position), Toast.LENGTH_SHORT).show();
                 if(position==0)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
@@ -128,6 +128,7 @@ public class StartActivity extends AppCompatActivity {
                 {
                     Intent intent=new Intent(StartActivity.this,WebLoad.class);
                     intent.putExtra("Url","https://soundcloud.com/buet-radio");
+                   // intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     //finish();
                     startActivity(intent);
                 }
@@ -135,6 +136,7 @@ public class StartActivity extends AppCompatActivity {
                 {
                     Intent intent=new Intent(StartActivity.this,WebLoad.class);
                     intent.putExtra("Url","http://buetradio.com/archive.html");
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     //finish();
                     startActivity(intent);
                 }
@@ -309,18 +311,16 @@ public class StartActivity extends AppCompatActivity {
         listIcon.add(R.drawable.channel2);
         listIcon.add(R.drawable.hits);
         listIcon.add(R.drawable.archive);
-        listIcon.add(R.drawable.call);
-        listIcon.add(R.drawable.play);
-        listIcon.add(R.drawable.jhhjh);
-        listIcon.add(R.drawable.jhhjh);
+        listIcon.add(R.drawable.icon);
+        listIcon.add(R.drawable.icon);
+        listIcon.add(R.drawable.icon);
+        listIcon.add(R.drawable.icon);
         listIcon.add(R.drawable.info);
-        listIcon.add(R.drawable.jhhjh);
+        listIcon.add(R.drawable.icon);
     }
 
 
-    public void onDrawerSlide(float slideOffset) {
 
-    }
     public View getContainerToolbar() {
         return mContainerToolbar;
     }
@@ -336,19 +336,21 @@ public class StartActivity extends AppCompatActivity {
         mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
     }
 
+    public void onDrawerSlide(float slideOffset) {
 
+    }
     public void onDrawerItemClicked(int index) {
         if (index == 0) {
 
             if(mAuth.getCurrentUser()!=null)
             {
-                Intent intent=new Intent(StartActivity.this,ProfileActivity.class);
+                Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
                 //finish();
                 startActivity(intent);
             }
             else
             {
-                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
                 intent.putExtra("From","Signin");
                 //finish();
                 startActivity(intent);
@@ -387,13 +389,13 @@ public class StartActivity extends AppCompatActivity {
         {
             if(mAuth.getCurrentUser()!=null)
             {
-                Intent intent=new Intent(StartActivity.this,ChatActivity.class);
+                Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
                 //finish();
                 startActivity(intent);
             }
             else
             {
-                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
                 intent.putExtra("From","Chatroom");
                 //finish();
                 startActivity(intent);
@@ -403,13 +405,13 @@ public class StartActivity extends AppCompatActivity {
         {
             if(mAuth.getCurrentUser()!=null)
             {
-                Intent intent=new Intent(StartActivity.this,RequestActivity.class);
+                Intent intent=new Intent(getApplicationContext(),RequestActivity.class);
                 //finish();
                 startActivity(intent);
             }
             else
             {
-                Intent intent=new Intent(StartActivity.this,SignInActivity.class);
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
                 intent.putExtra("From","Request");
                 //finish();
                 startActivity(intent);

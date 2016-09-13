@@ -1,146 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container_app_bar"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".Activity.PlayerActivity">
 
-    <include
-        android:id="@+id/app_bar"
-        layout="@layout/app_bar" />
-
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/container_app_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/app_bar" />
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:id="@+id/linearLayout">
+            android:layout_height="match_parent"
+            android:clickable="true"
+            android:focusableInTouchMode="true">
 
-
-            <ImageButton
-                android:id="@+id/bRecord"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:src="@drawable/record"
-                android:layout_weight="0.33"/>
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="horizontal"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true">
 
-            <ImageButton
-                android:id="@+id/bPlay"
+
+                <ImageButton
+                    android:id="@+id/bRecord"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="0.33"
+                    android:src="@drawable/record"
+                    android:background="#fcfcfc" />
+
+                <ImageButton
+                    android:id="@+id/bPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="0.33"
+                    android:src="@drawable/pause"
+                    android:background="#fcfcfc" />
+
+                <ImageButton
+                    android:id="@+id/bStop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_weight="0.33"
+                    android:src="@drawable/stop"
+                    android:background="#fcfcfc" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tplaying"
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:text=".....Playing....."
+                android:textColor="#e46868"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tRecording"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/pause"
-                android:layout_weight="0.33"/>
+                android:layout_above="@+id/linearLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="20dp"
+                android:text=".....Recording....."
+                android:textColor="#e46868"
+                android:textSize="18dp"
+                android:textStyle="bold" />
 
-            <ImageButton
-                android:id="@+id/bStop"
+            <LinearLayout
+                android:id="@+id/linearLayoutCall"
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:src="@drawable/stop"
-                android:layout_weight="0.33"/>
+                android:layout_below="@+id/tplaying"
+                android:layout_centerHorizontal="true">
 
-        </LinearLayout>
+                <ImageButton
+                    android:id="@+id/bCall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/callus"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    />
 
-        <TextView
-            android:text=".....Playing....."
-            android:id="@+id/tplaying"
+            </LinearLayout>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="#e46868"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="20dp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=".....Recording....."
-            android:id="@+id/tRecording"
-            android:textColor="#e46868"
-            android:textStyle="bold"
-            android:textSize="18dp"
-            android:layout_above="@+id/linearLayout"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="20dp" />
-
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/bCall"
-            android:src="@drawable/call"
-            android:layout_below="@+id/tplaying"
-            android:layout_toEndOf="@+id/bSms"
-            android:layout_toRightOf="@+id/bSms" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Call Us"
-            android:layout_alignTop="@+id/bCall"
-            android:layout_alignRight="@+id/tplaying"
-            android:layout_marginRight="60dp"
-            android:layout_marginEnd="33dp"
-            android:id="@+id/tCall"
-            android:layout_marginTop="30sp" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:lines="3"
-            android:ems="10"
-            android:id="@+id/eSms"
-            android:layout_below="@+id/bCall"
-            android:layout_centerHorizontal="true"
-            android:hint= "Send Us SMS with Name,Batch,Dept,Your message and Press Send" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send"
-            android:id="@+id/bSms"
-            android:layout_below="@+id/eSms"
-            android:layout_centerHorizontal="true" />
-
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/bSms"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
+            <EditText
+                android:id="@+id/eSms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutCall"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:hint="Send Us SMS with Name,Batch,Dept,Your message and Press Send"
+                android:inputType="textMultiLine"
+                android:lines="3" />
 
             <Button
+                android:id="@+id/bSms"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Chat Room"
-                android:id="@+id/bChat"
-                android:layout_weight="0.5" />
+                android:layout_below="@+id/eSms"
+                android:layout_centerHorizontal="true"
+                android:text="Send"
+                style="@style/Widget.AppCompat.Button.Colored"/>
 
-            <Button
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Request"
-                android:singleLine="true"
-                android:id="@+id/bRequest"
-                android:layout_weight="0.5" />
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/bSms"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+                <Button
+                    android:id="@+id/bChat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:text="Chat Room"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    />
 
-    </RelativeLayout>
-</LinearLayout>
+                <Button
+                    android:id="@+id/bRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:singleLine="true"
+                    android:text="Request"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    />
+            </LinearLayout>
 
+        </RelativeLayout>
+    </LinearLayout>
+    <fragment
+        android:id="@+id/fragment_navigation_drawer"
+        android:name="radio.buetian.org.buetradio.Fragment.FragmentDrawerPlayer"
+        android:layout_width="@dimen/nav_drawer_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:layout="@layout/fragment_navigation_drawer"
+        tools:layout="@layout/fragment_navigation_drawer" />
+
+</android.support.v4.widget.DrawerLayout>

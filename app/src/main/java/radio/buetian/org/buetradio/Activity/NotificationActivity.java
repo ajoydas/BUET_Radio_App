@@ -1,24 +1,32 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import radio.buetian.org.buetradio.Fragment.FragmentDrawerNotification;
 import radio.buetian.org.buetradio.R;
 
 public class NotificationActivity extends AppCompatActivity {
     TextView message,header;
     private Toolbar mToolbar;
     String from;
-    private Firebase ref;
+    private FragmentDrawerNotification mDrawerFragment;
+    private FirebaseAuth mAuth;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +34,14 @@ public class NotificationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_notification);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
+        setupDrawer();
+        mAuth = FirebaseAuth.getInstance();
         message = (TextView) findViewById(R.id.tMessage);
         header = (TextView) findViewById(R.id.tHeader);
+
+
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("events");
 
         from=getIntent().getExtras().getString("From");
         if(from.equals("Notification")) {
@@ -40,7 +54,10 @@ public class NotificationActivity extends AppCompatActivity {
         {
             header.setText("Events: ");
             message.setText("");
-            ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
+            //System.out.println(mAuth.getCurrentUser().getEmail());
+            //System.out.println("Events Auth"+ref.getAuth());
+            //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
+
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -49,7 +66,7 @@ public class NotificationActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onCancelled(FirebaseError firebaseError) {
+                public void onCancelled(DatabaseError databaseError) {
 
                 }
             });
@@ -64,9 +81,113 @@ public class NotificationActivity extends AppCompatActivity {
 
     }
 
+    private void setupDrawer() {
+//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        //set the Toolbar as ActionBar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawerNotification)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+
+    public void onDrawerSlide(float slideOffset) {
+
+    }
+    public void onDrawerItemClicked(int index) {
+        if (index == 0) {
+
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
+                finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Signin");
+                finish();
+                startActivity(intent);
+            }
+        }else if(index==1)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 1");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==2)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 2");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==3)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","https://soundcloud.com/buet-radio");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==4)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","http://buetradio.com/archive.html");
+            finish();
+            startActivity(intent);
+        }
+        else if (index==5)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Chatroom");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==6)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),RequestActivity.class);
+                //finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Request");
+                //finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==7)
+        {
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            }
+        }
     }
 }

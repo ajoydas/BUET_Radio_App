@@ -56,17 +56,22 @@
             android:value="@string/facebook_app_id" />
 
         <activity android:name=".Activity.ChatActivity"
-            android:label="BUET RADIO ChatRoom"/>
+            android:label="BUET RADIO ChatRoom"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Activity.PlayerActivity"
-            android:label="BUET Radio Player" />
+            android:label="BUET Radio Player"
+            android:windowSoftInputMode="stateHidden"/>
         <activity
             android:name=".Activity.WebLoad"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:label="BUET Radio Rewind"></activity>
+            android:label="BUET Radio Rewind">
+        </activity>
         <activity android:name=".Activity.RequestActivity"
-            android:label="BUET RADIO Request"></activity>
-        <activity android:name=".Activity.HelperActivity"/>
+            android:label="BUET RADIO Request"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity android:name=".Activity.HelperActivity" />
     </application>
 
 </manifest>

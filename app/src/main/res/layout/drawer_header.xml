@@ -42,20 +42,20 @@
             android:layout_height="wrap_content"
             android:text="Viewer"
             android:id="@+id/headername"
-            android:textColor="@android:color/white"
+            android:textColor="@color/colorPrimary"
             android:gravity="end"
             style="@style/TextAppearance.AppCompat.Medium" />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/colorAccent" />
+            android:background="@android:color/white" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="to BUET RADIO"
-            android:textColor="@android:color/white"
+            android:text="\@ BUET RADIO"
+            android:textColor="@color/colorPrimary"
             android:gravity="end"
             style="@style/TextAppearance.AppCompat.Small" />
     </LinearLayout>

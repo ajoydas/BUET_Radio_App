@@ -1,16 +1,19 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import radio.buetian.org.buetradio.R;
 
@@ -20,7 +23,8 @@ public class RequestActivity extends AppCompatActivity {
     EditText nameField,batchField,requestField;
     Button send;
     FirebaseAuth mAuth;
-    Firebase mRef;
+    private FirebaseDatabase database;
+    private DatabaseReference ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,26 +33,62 @@ public class RequestActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
         mAuth=FirebaseAuth.getInstance();
+        database = FirebaseDatabase.getInstance();
+        ref = database.getReference("requests");
+
         nameField= (EditText) findViewById(R.id.eName);
         batchField= (EditText) findViewById(R.id.eBatch);
         requestField= (EditText) findViewById(R.id.eRequest);
         send= (Button) findViewById(R.id.bSend);
+        nameField.setEnabled(false);
         if(mAuth.getCurrentUser()!=null) {
             nameField.setText(mAuth.getCurrentUser().getDisplayName());
         }
+
+        nameField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        batchField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
+        requestField.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    hideKeyboard(v);
+                }
+            }
+        });
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(nameField.getText().equals("")||requestField.getText().equals("")||nameField.getText()==null||requestField.getText()==null){
+                if(nameField.getText().toString().equals("")||requestField.getText().toString().equals("")||nameField.getText()==null||requestField.getText()==null){
                     Toast.makeText(RequestActivity.this, "Name or request can't be empty.", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    mRef = new Firebase("https://buetradio-865f1.firebaseio.com/requests");
-                    mRef.push().setValue("(" + nameField.getText() + "," + batchField.getText() + "," + requestField.getText() + ")", new Firebase.CompletionListener() {
+                    //mRef = new Firebase("https://buetradio-865f1.firebaseio.com/requests");
+
+                    ref.push().setValue("(" + nameField.getText() + "," + batchField.getText() + "," + requestField.getText() + ")", new DatabaseReference.CompletionListener()
+                    {
+
                         @Override
-                        public void onComplete(FirebaseError firebaseError, Firebase firebase) {
-                            if (firebaseError == null) {
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if (databaseError == null) {
                                 Toast.makeText(RequestActivity.this, "Request Submitted Successfully", Toast.LENGTH_SHORT).show();
+                                requestField.setText("");
                             }
                             else
                             {
@@ -61,4 +101,11 @@ public class RequestActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
+
 }

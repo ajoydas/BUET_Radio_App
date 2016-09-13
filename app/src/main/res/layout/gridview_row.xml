@@ -4,16 +4,16 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/border"
     android:padding="5dp">
-
+    <!--android:background="@drawable/border"-->
     <ImageView
-        android:layout_height="64dp"
+        android:layout_height="100dp"
         android:id="@+id/imageView1"
-        android:layout_width="64dp"
+        android:layout_width="100dp"
         android:src="@drawable/ic_google"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true">
+        android:layout_centerHorizontal="true"
+        android:background="#000000">
     </ImageView>
 
     <TextView
@@ -25,7 +25,10 @@
         android:layout_marginTop="2dp"
         android:layout_centerHorizontal="true"
         android:textSize="18sp"
-        android:ellipsize="marquee"></TextView>
+        android:ellipsize="marquee"
+        android:allowUndo="false"
+        android:textColor="@color/colorPrimaryDark"
+        android:visibility="visible"></TextView>
 
 
 </RelativeLayout>

@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/listIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
@@ -23,6 +23,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginLeft="72dp"
         android:text="Dummy Text"
-        android:textColor="@color/colorSecondaryText" />
+        android:textColor="@color/colorPrimaryDark" />
 
 </RelativeLayout>

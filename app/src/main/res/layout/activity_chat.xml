@@ -5,6 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:clickable="true"
+    android:focusableInTouchMode="true"
     tools:context=".Activity.ChatActivity">
 
     <include
@@ -13,7 +15,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <!--<android.support.v7.widget.RecyclerView-->
         <!--android:layout_width="match_parent"-->
@@ -43,7 +46,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="Comment" />
+            android:text="Comment"
+            style="@style/Widget.AppCompat.Button.Colored"
+            />
 
         <ListView
             android:id="@+id/chatList"

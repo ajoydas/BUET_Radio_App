@@ -3,6 +3,7 @@ package radio.buetian.org.buetradio.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +13,11 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.android.gms.internal.zzalq;
+import com.google.firebase.auth.FirebaseAuth;
+
 import radio.buetian.org.buetradio.Application.BUETRadio;
+import radio.buetian.org.buetradio.Fragment.FragmentDrawerWebLoad;
 import radio.buetian.org.buetradio.R;
 
 public class WebLoad extends AppCompatActivity {
@@ -20,6 +25,8 @@ public class WebLoad extends AppCompatActivity {
     private Toolbar mToolbar;
     private WebView browser ;
     String value=null;
+    private FirebaseAuth mAuth;
+    private FragmentDrawerWebLoad mDrawerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +34,24 @@ public class WebLoad extends AppCompatActivity {
         setContentView(R.layout.activity_load_web);
         mToolbar = (Toolbar) findViewById(R.id.app_bar);
         setSupportActionBar(mToolbar);
+        setupDrawer();
+        mAuth = FirebaseAuth.getInstance();
         value=getIntent().getExtras().getString("Url");
         browser=null;
         load();
     }
+    private void setupDrawer() {
+//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
+//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
+        //set the Toolbar as ActionBar
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawerWebLoad)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
+    }
+
 
     public void load()
     {
@@ -110,4 +131,99 @@ public class WebLoad extends AppCompatActivity {
             finish();
         }
     }
+
+
+    public void onDrawerSlide(float slideOffset) {
+
+    }
+    public void onDrawerItemClicked(int index) {
+        if (index == 0) {
+
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
+                finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Signin");
+                finish();
+                startActivity(intent);
+            }
+        }else if(index==1)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 1");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==2)
+        {
+            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
+            intent.putExtra("Stream","http://87.117.217.103:38164");
+            intent.putExtra("Player","Channel 2");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==3)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","https://soundcloud.com/buet-radio");
+            finish();
+            startActivity(intent);
+        }
+        else if(index==4)
+        {
+            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
+            intent.putExtra("Url","http://buetradio.com/archive.html");
+            finish();
+            startActivity(intent);
+        }
+        else if (index==5)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+                finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Chatroom");
+                finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==6)
+        {
+            if(mAuth.getCurrentUser()!=null)
+            {
+                Intent intent=new Intent(getApplicationContext(),RequestActivity.class);
+                finish();
+                startActivity(intent);
+            }
+            else
+            {
+                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
+                intent.putExtra("From","Request");
+                finish();
+                startActivity(intent);
+            }
+        }
+        else if (index==7)
+        {
+            finish();
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
+            }
+        }
+    }
+
+
 }
