@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.NotificationActivity">
+    tools:context=".Activity.EditEvents">
 
     <LinearLayout
         android:id="@+id/container_app_bar"
@@ -28,61 +28,41 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="30dp"
-                android:text="New Notification!"
+                android:text="Edit Events"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
                 android:textColor="@color/colorPrimaryDark" />
 
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/scrollView3"
-                android:layout_below="@+id/tHeader"
-                android:layout_above="@+id/textView">
+                android:layout_below="@+id/tHeader">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <TextView
-                        android:id="@+id/tMessage"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/eEvent"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="20dp"
-                        android:text="New Notification!"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        android:layout_margin="20dp" />
 
                     <Button
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Clear"
-                        android:id="@+id/bOption"
-                        android:layout_below="@+id/tMessage"
+                        android:text="Publish"
+                        android:id="@+id/bPublish"
+                        android:layout_below="@+id/eEvent"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="43dp"
                         style="@style/Widget.AppCompat.Button.Colored"/>
                 </RelativeLayout>
             </ScrollView>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="30dp"
-                android:text="Stay Tuned with BUET RADIO"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:id="@+id/textView" />
-
         </RelativeLayout>
     </LinearLayout>
-    <fragment
-        android:id="@+id/fragment_navigation_drawer"
-        android:name="radio.buetian.org.buetradio.Fragment.FragmentDrawerNotification"
-        android:layout_width="@dimen/nav_drawer_width"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        app:layout="@layout/fragment_navigation_drawer"
-        tools:layout="@layout/fragment_navigation_drawer" />
 </android.support.v4.widget.DrawerLayout>

@@ -6,20 +6,19 @@
     android:background="@color/colorPrimaryText"
     android:layout_height="wrap_content">
 
-    <com.pkmmte.view.CircularImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image_profile"
         android:layout_centerVertical="true"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/ic_google"
+        android:src="@drawable/icon"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        app:border="true"
         app:border_color="@android:color/white"
         app:border_width="4dp"
-        app:shadow="true" />
+        />
 
     <LinearLayout
         android:layout_centerVertical="true"

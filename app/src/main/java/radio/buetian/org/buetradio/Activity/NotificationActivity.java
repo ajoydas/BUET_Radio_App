@@ -6,10 +6,13 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -21,6 +24,7 @@ import radio.buetian.org.buetradio.R;
 
 public class NotificationActivity extends AppCompatActivity {
     TextView message,header;
+    Button option;
     private Toolbar mToolbar;
     String from;
     private FragmentDrawerNotification mDrawerFragment;
@@ -38,10 +42,10 @@ public class NotificationActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         message = (TextView) findViewById(R.id.tMessage);
         header = (TextView) findViewById(R.id.tHeader);
-
+        option= (Button) findViewById(R.id.bOption);
 
         database = FirebaseDatabase.getInstance();
-        ref = database.getReference("events");
+
 
         from=getIntent().getExtras().getString("From");
         if(from.equals("Notification")) {
@@ -49,14 +53,37 @@ public class NotificationActivity extends AppCompatActivity {
                 header.setText("New Notification!");
                 message.setText(getIntent().getExtras().getString("Message"));
             }
+            option.setVisibility(View.INVISIBLE);
         }
         else if(from.equals("Events"))
         {
+            ref = database.getReference("events");
             header.setText("Events: ");
             message.setText("");
             //System.out.println(mAuth.getCurrentUser().getEmail());
             //System.out.println("Events Auth"+ref.getAuth());
             //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
+            if(mAuth.getCurrentUser()!=null) {
+                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                    option.setVisibility(View.VISIBLE);
+                    option.setText("Edit");
+                    option.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Todo edit
+                            finish();
+                            startActivity(new Intent(NotificationActivity.this,EditEvents.class));
+
+                        }
+                    });
+                }
+                else {
+                    option.setVisibility(View.INVISIBLE);
+                }
+            }
+            else {
+                option.setVisibility(View.INVISIBLE);
+            }
 
             ref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -74,8 +101,82 @@ public class NotificationActivity extends AppCompatActivity {
         }
         else if(from.equals("Info"))
         {
+            option.setVisibility(View.GONE);
             header.setText("Info: ");
             message.setText("Buet Radio\n Buet Radio\nBuet Radio\n");
+
+        }
+        else if(from.equals("Requests"))
+        {
+            header.setText("Requests: ");
+            message.setText("");
+            ref = database.getReference("requests");
+            //System.out.println(mAuth.getCurrentUser().getEmail());
+            //System.out.println("Events Auth"+ref.getAuth());
+            //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
+            if(mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com"))
+            {
+                option.setVisibility(View.VISIBLE);
+                option.setText("Clear All");
+                option.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Todo edit
+                    }
+                });
+            }
+            else
+            {
+                option.setVisibility(View.GONE);
+            }
+
+            ref.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    message.append("\n");
+                    message.append(dataSnapshot.getValue().toString());
+                    Toast.makeText(getApplicationContext(),"New Request added.",Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Toast.makeText(getApplicationContext(),"Request deleted.Please refresh.",Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+            option.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ref.removeValue(new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                            if(databaseError==null)
+                            {
+                                Toast.makeText(getApplicationContext(),"Deleted Successfully.Please Refresh",Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(),"Fail to delete.Try again",Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                }
+            });
 
         }
 

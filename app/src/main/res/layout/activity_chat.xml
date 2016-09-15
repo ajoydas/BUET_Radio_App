@@ -18,6 +18,12 @@
         android:layout_height="match_parent"
         >
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messageRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/eComment" />
+
         <!--<android.support.v7.widget.RecyclerView-->
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
@@ -35,9 +41,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_toLeftOf="@+id/bComment"
-            android:layout_toStartOf="@+id/bComment"
-            android:hint="Write Here......" />
+            android:layout_toStartOf="@+id/bDelete"
+            android:hint="Write Here......"
+            android:layout_toLeftOf="@+id/bDelete" />
 
         <Button
             android:id="@+id/bComment"
@@ -50,15 +56,22 @@
             style="@style/Widget.AppCompat.Button.Colored"
             />
 
-        <ListView
-            android:id="@+id/chatList"
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/eComment"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:transcriptMode="alwaysScroll"/>
+            android:text="Clear"
+            android:id="@+id/bDelete"
+            android:layout_alignParentBottom="true"
+            android:layout_toLeftOf="@+id/bComment"
+            android:layout_toStartOf="@+id/bComment"
+            style="@style/Widget.AppCompat.Button.Colored"/>
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progressBar"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 </LinearLayout>

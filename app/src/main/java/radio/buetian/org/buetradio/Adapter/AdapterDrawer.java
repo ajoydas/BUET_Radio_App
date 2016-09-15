@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.pkmmte.view.CircularImageView;
 
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -24,6 +23,7 @@ import java.net.URLConnection;
 import java.util.Collections;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import radio.buetian.org.buetradio.Objects.Information;
 import radio.buetian.org.buetradio.R;
 
@@ -34,7 +34,7 @@ public class AdapterDrawer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     private static final int TYPE_ITEM=1;
     private LayoutInflater inflater;
     FirebaseAuth mAuth;
-    CircularImageView imageView;
+    CircleImageView imageView;
     Bitmap bm;
 
     private Context context;
@@ -53,7 +53,7 @@ public class AdapterDrawer extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         if(viewType==TYPE_HEADER){
             mAuth= FirebaseAuth.getInstance();
             View view=inflater.inflate(R.layout.drawer_header, parent,false);
-            imageView= (CircularImageView) view.findViewById(R.id.image_profile);
+            imageView= (CircleImageView) view.findViewById(R.id.image_profile);
             TextView headername = (TextView) view.findViewById(R.id.headername);
             if(mAuth.getCurrentUser()!=null) {
                 headername.setText(mAuth.getCurrentUser().getDisplayName());

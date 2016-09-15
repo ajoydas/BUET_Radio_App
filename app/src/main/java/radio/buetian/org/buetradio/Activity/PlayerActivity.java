@@ -11,6 +11,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,7 +35,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.phenotype.Flag;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -43,6 +48,7 @@ import java.io.IOException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import radio.buetian.org.buetradio.BuildConfig;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawerPlayer;
 import radio.buetian.org.buetradio.Objects.PlayerConnection;
@@ -62,10 +68,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     String channel;
     String stream_url;
+    private String CallNumber;
+    private String SmsNumber;
     private FirebaseAuth mAuth;
     private ProgressDialog progressDialog;
     private ViewGroup mContainerToolbar;
     private FragmentDrawerPlayer mDrawerFragment;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,11 +96,33 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         setSupportActionBar(mToolbar);
         setupDrawer();
 
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
        /* View view = this.getCurrentFocus();
         if (view != null) {
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }*/
+        mFirebaseRemoteConfig.fetch(0)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(PlayerActivity.this, "Fetch Successfull",
+                                    Toast.LENGTH_SHORT).show();
+                            mFirebaseRemoteConfig.activateFetched();
+                        } else {
+                            Toast.makeText(PlayerActivity.this, "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        CallNumber=mFirebaseRemoteConfig.getString("CallNumber");
+                        SmsNumber=mFirebaseRemoteConfig.getString("SmsNumber");
+                    }
+                });
 
 
         PlayerConnection.setUi(true);
@@ -295,7 +326,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:01834855306"));
+                        callIntent.setData(Uri.parse(CallNumber));
                         try {
                             startActivity(callIntent);
                         } catch (Exception e) {
@@ -317,7 +348,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             else
             {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse("tel:01834855306"));
+                callIntent.setData(Uri.parse(CallNumber));
                 try {
                     startActivity(callIntent);
                 } catch (Exception e) {
@@ -326,7 +357,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         if (view == sendsms) {
-            String phoneNo = "01521487525";
+            String phoneNo = SmsNumber;
             String sms = textSMS.getText().toString();
             if (sms.equals("")) {
                 Toast.makeText(getApplicationContext(), "SMS is empty! Please write your message.",

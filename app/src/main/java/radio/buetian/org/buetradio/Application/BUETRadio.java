@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 
 /**
@@ -27,7 +28,8 @@ public class BUETRadio extends android.app.Application{
         super.onCreate();
         sInstance = this;
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        if (!FirebaseApp.getApps(this).isEmpty())
+            FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 

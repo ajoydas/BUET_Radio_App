@@ -64,98 +64,113 @@
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tplaying"
+            <ScrollView
                 android:layout_width="match_parent"
-
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="20dp"
-                android:text=".....Playing....."
-                android:textColor="#e46868"
-                android:textSize="18dp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tRecording"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/scrollView2"
                 android:layout_above="@+id/linearLayout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="20dp"
-                android:text=".....Recording....."
-                android:textColor="#e46868"
-                android:textSize="18dp"
-                android:textStyle="bold" />
+                android:layout_alignParentTop="true">
 
-            <LinearLayout
-                android:id="@+id/linearLayoutCall"
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/tplaying"
-                android:layout_centerHorizontal="true">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
 
-                <ImageButton
-                    android:id="@+id/bCall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/callus"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    />
+                    <TextView
+                        android:id="@+id/tplaying"
+                        android:layout_width="match_parent"
 
-            </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="20dp"
+                        android:text=".....Playing....."
+                        android:textColor="#e46868"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/eSms"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/linearLayoutCall"
-                android:layout_centerHorizontal="true"
-                android:ems="10"
-                android:hint="Send Us SMS with Name,Batch,Dept,Your message and Press Send"
-                android:inputType="textMultiLine"
-                android:lines="3" />
+                    <TextView
+                        android:id="@+id/tRecording"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linearLayout3"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="20dp"
+                        android:text=".....Recording....."
+                        android:textColor="#e46868"
+                        android:textSize="18dp"
+                        android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/bSms"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/eSms"
-                android:layout_centerHorizontal="true"
-                android:text="Send"
-                style="@style/Widget.AppCompat.Button.Colored"/>
+                    <LinearLayout
+                        android:id="@+id/linearLayoutCall"
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/tplaying"
+                        android:layout_centerHorizontal="true">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/bSms"
-                android:orientation="horizontal">
+                        <ImageButton
+                            android:id="@+id/bCall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/callus"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            />
 
-                <Button
-                    android:id="@+id/bChat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:text="Chat Room"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    />
+                    </LinearLayout>
 
-                <Button
-                    android:id="@+id/bRequest"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="0.5"
-                    android:singleLine="true"
-                    android:text="Request"
-                    style="@style/Widget.AppCompat.Button.Colored"
-                    />
-            </LinearLayout>
+                    <EditText
+                        android:id="@+id/eSms"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/linearLayoutCall"
+                        android:layout_centerHorizontal="true"
+                        android:ems="10"
+                        android:hint="Send Us SMS with Name,Batch,Dept,Your message and Press Send"
+                        android:inputType="textMultiLine"
+                        android:lines="3" />
+
+                    <Button
+                        android:id="@+id/bSms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/eSms"
+                        android:layout_centerHorizontal="true"
+                        android:text="Send"
+                        style="@style/Widget.AppCompat.Button.Colored"/>
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/bSms"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/bChat"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:text="Chat Room"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            />
+
+                        <Button
+                            android:id="@+id/bRequest"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0.5"
+                            android:singleLine="true"
+                            android:text="Request"
+                            style="@style/Widget.AppCompat.Button.Colored"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+            </ScrollView>
 
         </RelativeLayout>
+
     </LinearLayout>
     <fragment
         android:id="@+id/fragment_navigation_drawer"

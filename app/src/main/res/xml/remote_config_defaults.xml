@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- START xml_defaults -->
+<defaultsMap>
+    <entry>
+        <key>Channel1</key>
+        <value>http://87.117.217.103:38164</value>
+    </entry>
+    <entry>
+        <key>Channel2</key>
+        <value>http://87.117.217.103:38164</value>
+    </entry>
+    <entry>
+        <key>CallNumber</key>
+        <value>tel:01834855306</value>
+    </entry>
+    <entry>
+        <key>SmsNumber</key>
+        <value>01521487525</value>
+    </entry>
+    <entry>
+        <key>ContactNumber</key>
+        <value>tel:01834855306</value>
+    </entry>
+</defaultsMap>
+    <!-- END xml_defaults -->

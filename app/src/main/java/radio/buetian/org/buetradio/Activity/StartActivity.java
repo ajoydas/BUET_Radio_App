@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,13 +22,18 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
 
 import radio.buetian.org.buetradio.Adapter.GridviewAdapter;
+import radio.buetian.org.buetradio.BuildConfig;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
 import radio.buetian.org.buetradio.R;
 
@@ -54,7 +60,10 @@ public class StartActivity extends AppCompatActivity {
     private GridView gridView;
 
     FirebaseAuth mAuth;
-
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private String StreamUrl1;
+    private String StreamUrl2;
+    private String ContactNumber;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +88,33 @@ public class StartActivity extends AppCompatActivity {
         setupDrawer();
 
         prepareList();
+
+        mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
+        FirebaseRemoteConfigSettings configSettings = new FirebaseRemoteConfigSettings.Builder()
+                .setDeveloperModeEnabled(BuildConfig.DEBUG)
+                .build();
+        mFirebaseRemoteConfig.setConfigSettings(configSettings);
+        mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
+
+
+        mFirebaseRemoteConfig.fetch(0)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(StartActivity.this, "Fetch Successfull",
+                                Toast.LENGTH_SHORT).show();
+                            mFirebaseRemoteConfig.activateFetched();
+                        } else {
+                            Toast.makeText(StartActivity.this, "Fetch Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
+                        StreamUrl2=mFirebaseRemoteConfig.getString("Channel2");
+                        ContactNumber=mFirebaseRemoteConfig.getString("ContactNumber");
+                    }
+                });
+
 
         // prepared arraylist and passed it to the Adapter class
         mAdapter = new GridviewAdapter(this,listMenuItem, listIcon);
@@ -111,7 +147,7 @@ public class StartActivity extends AppCompatActivity {
                 if(position==0)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    intent.putExtra("Stream",StreamUrl1);
                     intent.putExtra("Player","Channel 1");
                     //finish();
                     startActivity(intent);
@@ -119,7 +155,7 @@ public class StartActivity extends AppCompatActivity {
                 else if(position==1)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    intent.putExtra("Stream",StreamUrl2);
                     intent.putExtra("Player","Channel 2");
                     //finish();
                     startActivity(intent);
@@ -215,7 +251,7 @@ public class StartActivity extends AppCompatActivity {
                             if (items[item].equals("Call Us")) {
                                 //System.out.println("Call us clicked");
                                 Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:01834855306"));
+                                callIntent.setData(Uri.parse(ContactNumber));
                                 try {
                                     startActivity(callIntent);
                                 }

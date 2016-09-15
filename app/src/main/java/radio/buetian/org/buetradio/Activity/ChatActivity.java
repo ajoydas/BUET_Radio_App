@@ -2,29 +2,48 @@ package radio.buetian.org.buetradio.Activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.IntentCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.firebase.ui.database.FirebaseListAdapter;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,15 +52,59 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import radio.buetian.org.buetradio.Objects.ChatMessage;
+import radio.buetian.org.buetradio.Objects.FriendlyMessage;
 import radio.buetian.org.buetradio.R;
 
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity  implements
+        GoogleApiClient.OnConnectionFailedListener {
 
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    public static class MessageViewHolder extends RecyclerView.ViewHolder {
+        public TextView messageTextView;
+        public TextView messengerTextView;
+        public CircleImageView messengerImageView;
+
+        public MessageViewHolder(View v) {
+            super(v);
+            messageTextView = (TextView) itemView.findViewById(R.id.messageTextView);
+            messengerTextView = (TextView) itemView.findViewById(R.id.messengerTextView);
+            messengerImageView = (CircleImageView) itemView.findViewById(R.id.messengerImageView);
+        }
+    }
+
+    private static final String TAG = "MainActivity";
+    public static final String MESSAGES_CHILD = "chatroom";
+    private static final int REQUEST_INVITE = 1;
+    public static final int DEFAULT_MSG_LENGTH_LIMIT = 10;
+    public static final String ANONYMOUS = "anonymous";
+    private static final String MESSAGE_SENT_EVENT = "message_sent";
+    private String mUsername;
+    private String mPhotoUrl;
+    private SharedPreferences mSharedPreferences;
+
+    private Button mSendButton;
+    private RecyclerView mMessageRecyclerView;
+    private LinearLayoutManager mLinearLayoutManager;
+    private FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder> mFirebaseAdapter;
+    private ProgressBar mProgressBar;
+    private DatabaseReference mFirebaseDatabaseReference;
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
+    private FirebaseAnalytics mFirebaseAnalytics;
+    private EditText mMessageEditText;
+    private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private GoogleApiClient mGoogleApiClient;
     private FirebaseDatabase database;
     private DatabaseReference ref;
     private Button comment;
-    private EditText write;
+    private Button delete;
+    //private EditText write;
     FirebaseAuth mAuth;
     private int flag;
     private String profilePic;
@@ -59,61 +122,77 @@ public class ChatActivity extends AppCompatActivity {
         int flag=0;
         mAuth=FirebaseAuth.getInstance();
 
-        comment = (Button) findViewById(R.id.bComment);
-        write = (EditText) findViewById(R.id.eComment);
-
-
-        FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder> adapter;
+        //comment = (Button) findViewById(R.id.bComment);
+        delete = (Button) findViewById(R.id.bDelete);
 
         database = FirebaseDatabase.getInstance();
         ref = database.getReference("chatroom");
 
-        //ref = new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
-        //Query query=new Firebase("https://buetradio-865f1.firebaseio.com/chatroom");
-        listView = (ListView) findViewById(R.id.chatList);
-        ListAdapter ladapter = new FirebaseListAdapter<ChatMessage>(this, ChatMessage.class, R.layout.message, ref)
+        // Initialize Firebase Auth
+        mFirebaseAuth = FirebaseAuth.getInstance();
+        mFirebaseUser = mFirebaseAuth.getCurrentUser();
+        try {
+            mUsername = mFirebaseUser.getDisplayName();
+            mPhotoUrl = mFirebaseUser.getPhotoUrl().toString();
+        }
+        catch (Exception e)
         {
+            Log.d("Error","Null in chat activity");
+        }
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .enableAutoManage(this /* FragmentActivity */, this /* OnConnectionFailedListener */)
+                .addApi(Auth.GOOGLE_SIGN_IN_API)
+                .build();
 
-            protected void populateView(View view, ChatMessage chatMessage, int i) {
-                TextView nameText = (TextView) view.findViewById(R.id.user);
-                TextView messageText = (TextView) view.findViewById(R.id.message);
-                //ImageView photo = (ImageView) view.findViewById(R.id.iPhoto);
-                nameText.setText(chatMessage.getUser());
-                messageText.setText(chatMessage.getMessage());
-                //chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
-                //photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
-            }
-        };
-        listView.setAdapter(ladapter);
+        mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
+        mMessageRecyclerView = (RecyclerView) findViewById(R.id.messageRecyclerView);
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mLinearLayoutManager.setStackFromEnd(true);
 
+        mFirebaseDatabaseReference = FirebaseDatabase.getInstance().getReference();
+        mFirebaseAdapter = new FirebaseRecyclerAdapter<FriendlyMessage, MessageViewHolder>(
+                FriendlyMessage.class,
+                R.layout.item_message,
+                MessageViewHolder.class,
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD)) {
 
-/*        RecyclerView recycler = (RecyclerView) findViewById(R.id.messages_recycler);
-        recycler.setHasFixedSize(true);
-        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        //linearLayoutManager.setStackFromEnd(true);
-        recycler.setLayoutManager(linearLayoutManager);*/
-
-        //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
-        //StrictMode.setThreadPolicy(policy);
-
-
-/*        adapter = new FirebaseRecyclerAdapter<ChatMessage, ChatMessageViewHolder>(ChatMessage.class, R.layout.message,ChatMessageViewHolder.class,ref) {
             @Override
-            protected void populateViewHolder(ChatMessageViewHolder chatMessageViewHolder, ChatMessage chatMessage, int i) {
-                chatMessageViewHolder.nameText.setText(chatMessage.getUser());
-                chatMessageViewHolder.messageText.setText(chatMessage.getMessage());
-                //chatMessageViewHolder.photo.setImageBitmap(StringToBitMap(chatMessage.getPhotoUrl()));
-                chatMessageViewHolder.photo.setImageBitmap(getImageBitmap(chatMessage.getPhotoUrl()));
-
+            protected void populateViewHolder(MessageViewHolder viewHolder, FriendlyMessage friendlyMessage, int position) {
+                mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+                viewHolder.messageTextView.setText(friendlyMessage.getText());
+                viewHolder.messengerTextView.setText(friendlyMessage.getName());
+                if (friendlyMessage.getPhotoUrl() == null) {
+                    viewHolder.messengerImageView.setImageDrawable(ContextCompat.getDrawable(ChatActivity.this,
+                            R.drawable.ic_account_circle_black_36dp));
+                } else {
+                    Glide.with(ChatActivity.this)
+                            .load(friendlyMessage.getPhotoUrl())
+                            .into(viewHolder.messengerImageView);
+                }
             }
-
         };
-        recycler.setAdapter(adapter);
 
-        recycler.scrollToPosition(recycler.getAdapter().getItemCount()-1);*/
+        mFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = mFirebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                // If the recycler view is initially being loaded or the user is at the bottom of the list, scroll
+                // to the bottom of the list to show the newly added message.
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (friendlyMessageCount - 1) && lastVisiblePosition == (positionStart - 1))) {
+                    mMessageRecyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });
 
-        write.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        mMessageRecyclerView.setLayoutManager(mLinearLayoutManager);
+        mMessageRecyclerView.setAdapter(mFirebaseAdapter);
+
+
+        mMessageEditText = (EditText) findViewById(R.id.eComment);
+        mMessageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
@@ -121,18 +200,93 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-
-
-        comment.setOnClickListener(new View.OnClickListener() {
+        mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
-                ChatMessage chat=new ChatMessage();
-                chat.setUser(mAuth.getCurrentUser().getDisplayName());
-                chat.setMessage(write.getText().toString());
-                //chat.setPhotoUrl(mAuth.getCurrentUser().getPhotoUrl().toString());
-                ref.push().setValue(chat);
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (charSequence.toString().trim().length() > 0) {
+                    mSendButton.setEnabled(true);
+                } else {
+                    mSendButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
+
+        mSendButton = (Button) findViewById(R.id.bComment);
+        mSendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername,
+                        mPhotoUrl);
+                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+                mMessageEditText.setText("");
+                //mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
+            }
+        });
+
+        if(mAuth.getCurrentUser().getEmail()!=null) {
+
+            if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                delete.setVisibility(View.VISIBLE);
+                delete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+                        builder.setTitle("Clear Chatroom!");
+                        builder.setMessage("Are you sure you want to clear the chatroom?");
+                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, int which) {
+                                ref.removeValue(new DatabaseReference.CompletionListener() {
+                                    @Override
+                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                        if (databaseError == null) {
+                                            Toast.makeText(getApplicationContext(), "Deleted Successfully.", Toast.LENGTH_SHORT).show();
+                                            FriendlyMessage friendlyMessage = new FriendlyMessage("Welcome to our chatroom", mUsername,
+                                                    mPhotoUrl);
+                                            mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+                                            mMessageEditText.setText("");
+                                            dialog.cancel();
+                                        } else {
+                                            Toast.makeText(getApplicationContext(), "Fail to delete.Try again", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.cancel();
+                            }
+                        });
+
+                        AlertDialog alertDialog = builder.create();
+                        alertDialog.show();
+                    }
+                });
+            }
+            else
+            {
+                delete.setVisibility(View.GONE);
+            }
+
+        }
+        else
+        {
+            delete.setVisibility(View.GONE);
+        }
+
+
     }
 
     public void hideKeyboard(View view) {
@@ -194,7 +348,7 @@ public class ChatActivity extends AppCompatActivity {
             return null;
         }
     }*/
-
+/*
     private static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         TextView messageText;
         TextView nameText;
@@ -227,13 +381,12 @@ public class ChatActivity extends AppCompatActivity {
         byte[] imageBytes = baos.toByteArray();
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
-    }
+    }*/
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent intent=new Intent(this,StartActivity.class);
-        startActivity(intent);
+        finish();
 
     }
 }

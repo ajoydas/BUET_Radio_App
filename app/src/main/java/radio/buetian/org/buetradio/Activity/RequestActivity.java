@@ -1,6 +1,7 @@
 package radio.buetian.org.buetradio.Activity;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,6 +26,7 @@ public class RequestActivity extends AppCompatActivity {
     FirebaseAuth mAuth;
     private FirebaseDatabase database;
     private DatabaseReference ref;
+    private Button view;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,27 @@ public class RequestActivity extends AppCompatActivity {
         batchField= (EditText) findViewById(R.id.eBatch);
         requestField= (EditText) findViewById(R.id.eRequest);
         send= (Button) findViewById(R.id.bSend);
+        view=(Button) findViewById(R.id.bView);
+        if(mAuth.getCurrentUser().getEmail()!=null) {
+
+            if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                view.setVisibility(View.VISIBLE);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(RequestActivity.this, NotificationActivity.class);
+                        intent.putExtra("From", "Requests");
+                        finish();
+                        startActivity(intent);
+                    }
+                });
+            } else {
+                view.setVisibility(View.GONE);
+            }
+        }
+        else {
+            view.setVisibility(View.GONE);
+        }
         nameField.setEnabled(false);
         if(mAuth.getCurrentUser()!=null) {
             nameField.setText(mAuth.getCurrentUser().getDisplayName());

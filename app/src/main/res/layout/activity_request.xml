@@ -120,6 +120,14 @@
                 android:id="@+id/bSend"
                 android:layout_gravity="center_horizontal"
                 style="@style/Widget.AppCompat.Button.Colored"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View"
+                android:id="@+id/bView"
+                android:layout_gravity="center_horizontal"
+                style="@style/Widget.AppCompat.Button.Colored"/>
         </LinearLayout>
     </ScrollView>
 

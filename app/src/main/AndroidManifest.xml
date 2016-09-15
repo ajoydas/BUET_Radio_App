@@ -43,35 +43,38 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         -->
-        <activity android:name=".Activity.NotificationActivity"
-            android:label="BUET RADIO"/>
+        <activity
+            android:name=".Activity.NotificationActivity"
+            android:label="BUET RADIO" />
         <activity
             android:name=".Activity.SignInActivity"
             android:label="BUET RADIO SignIn" />
-        <activity android:name=".Activity.ProfileActivity"
-            android:label="BUET RADIO User Profile"/>
+        <activity
+            android:name=".Activity.ProfileActivity"
+            android:label="BUET RADIO User Profile" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".Activity.ChatActivity"
+        <activity
+            android:name=".Activity.ChatActivity"
             android:label="BUET RADIO ChatRoom"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.PlayerActivity"
             android:label="BUET Radio Player"
-            android:windowSoftInputMode="stateHidden"/>
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".Activity.WebLoad"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:label="BUET Radio Rewind">
-        </activity>
-        <activity android:name=".Activity.RequestActivity"
+            android:label="BUET Radio Rewind"></activity>
+        <activity
+            android:name=".Activity.RequestActivity"
             android:label="BUET RADIO Request"
-            android:windowSoftInputMode="stateHidden">
-        </activity>
+            android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".Activity.HelperActivity" />
+        <activity android:name=".Activity.EditEvents"></activity>
     </application>
 
 </manifest>
