@@ -1,11 +1,16 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +20,9 @@ import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,9 +30,12 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.google.android.gms.appinvite.AppInviteInvitation;
+import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
@@ -56,6 +67,7 @@ public class StartActivity extends AppCompatActivity {
     private GridviewAdapter mAdapter;
     private ArrayList<String> listMenuItem;
     private ArrayList<Integer> listIcon;
+    private static final int REQUEST_INVITE = 1;
 
     private GridView gridView;
 
@@ -83,6 +95,42 @@ public class StartActivity extends AppCompatActivity {
         }
 
 
+        //Showing Intro
+
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //  Initialize SharedPreferences
+                SharedPreferences getPrefs = PreferenceManager
+                        .getDefaultSharedPreferences(getBaseContext());
+
+                //  Create a new boolean and preference and set it to true
+                boolean isFirstStart = getPrefs.getBoolean("firstStart", true);
+
+                //  If the activity has never started before...
+                if (isFirstStart) {
+
+                    //  Launch app intro
+                    Intent i = new Intent(StartActivity.this, MyIntro.class);
+                    startActivity(i);
+
+                    //  Make a new preferences editor
+                    SharedPreferences.Editor e = getPrefs.edit();
+
+                    //  Edit preference to make it false because we don't want this to run again
+                    e.putBoolean("firstStart", false);
+
+                    //  Apply changes
+                    e.apply();
+                }
+            }
+        });
+
+
+
+
+        // Start the thread
+        t.start();
 
         mAuth = FirebaseAuth.getInstance();
         setupDrawer();
@@ -102,12 +150,10 @@ public class StartActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(StartActivity.this, "Fetch Successfull",
-                                Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(StartActivity.this, "Fetch Successfull", Toast.LENGTH_SHORT).show();
                             mFirebaseRemoteConfig.activateFetched();
                         } else {
-                            Toast.makeText(StartActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(StartActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
                         StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
                         StreamUrl2=mFirebaseRemoteConfig.getString("Channel2");
@@ -342,7 +388,7 @@ public class StartActivity extends AppCompatActivity {
         listMenuItem.add("Info");
         listMenuItem.add("Contact Us");
 
-        listIcon = new ArrayList<Integer>();
+        /*listIcon = new ArrayList<Integer>();
         listIcon.add(R.drawable.channel1);
         listIcon.add(R.drawable.channel2);
         listIcon.add(R.drawable.hits);
@@ -352,7 +398,19 @@ public class StartActivity extends AppCompatActivity {
         listIcon.add(R.drawable.icon);
         listIcon.add(R.drawable.icon);
         listIcon.add(R.drawable.info);
-        listIcon.add(R.drawable.icon);
+        listIcon.add(R.drawable.icon);*/
+        listIcon = new ArrayList<Integer>();
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+        listIcon.add(R.mipmap.ic_launcher);
+
     }
 
 
@@ -505,6 +563,87 @@ public class StartActivity extends AppCompatActivity {
                 }
 
             }
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.invite_menu:
+                sendInvitation();
+                return true;
+            case R.id.exit_menu:
+                NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                notificationManager.cancelAll();
+                System.exit(0);
+                return true;
+            case R.id.fbpage_menu:
+                Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
+                String facebookUrl = getFacebookPageURL(this);
+                facebookIntent.setData(Uri.parse(facebookUrl));
+                startActivity(facebookIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sendInvitation() {
+        Intent intent = new AppInviteInvitation.IntentBuilder(" Invitation")
+                .setMessage("Please join BUET Radio community and stay tuned")
+                .setCallToActionText("Call to action")
+                .build();
+        startActivityForResult(intent, REQUEST_INVITE);
+    }
+
+    boolean doubleBackToExitPressedOnce = false;
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+
+            System.exit(0);
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
+
+    public static String FACEBOOK_URL = "https://www.facebook.com/BUETradio";
+    public static String FACEBOOK_PAGE_ID = "1657458381203485";
+
+    //method to get the right URL to use in the intent
+    public String getFacebookPageURL(Context context) {
+        PackageManager packageManager = context.getPackageManager();
+        try {
+            int versionCode = packageManager.getPackageInfo("com.facebook.katana", 0).versionCode;
+            if (versionCode >= 3002850) { //newer versions of fb app
+                return "fb://facewebmodal/f?href=" + FACEBOOK_URL;
+            } else { //older versions of fb app
+                return "fb://page/" + FACEBOOK_PAGE_ID;
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            return FACEBOOK_URL; //normal web url
         }
     }
 

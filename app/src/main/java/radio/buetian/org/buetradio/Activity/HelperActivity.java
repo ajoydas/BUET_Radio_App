@@ -48,10 +48,6 @@ public class HelperActivity extends Activity {
                     startActivity(intent);
                 }
             }
-            else
-            {
-                Toast.makeText(getApplicationContext(),"Please select a channel to play on the app",Toast.LENGTH_SHORT).show();
-            }
             finish();
     }
 

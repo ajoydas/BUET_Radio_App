@@ -230,58 +230,60 @@ public class ChatActivity extends AppCompatActivity  implements
                 //mFirebaseAnalytics.logEvent(MESSAGE_SENT_EVENT, null);
             }
         });
+        try {
 
-        if(mAuth.getCurrentUser().getEmail()!=null) {
+            if (mAuth.getCurrentUser().getEmail() != null) {
 
-            if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
-                delete.setVisibility(View.VISIBLE);
-                delete.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                    delete.setVisibility(View.VISIBLE);
+                    delete.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
 
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
-                        builder.setTitle("Clear Chatroom!");
-                        builder.setMessage("Are you sure you want to clear the chatroom?");
-                        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, int which) {
-                                ref.removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                        if (databaseError == null) {
-                                            Toast.makeText(getApplicationContext(), "Deleted Successfully.", Toast.LENGTH_SHORT).show();
-                                            FriendlyMessage friendlyMessage = new FriendlyMessage("Welcome to our chatroom", mUsername,
-                                                    mPhotoUrl);
-                                            mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
-                                            mMessageEditText.setText("");
-                                            dialog.cancel();
-                                        } else {
-                                            Toast.makeText(getApplicationContext(), "Fail to delete.Try again", Toast.LENGTH_SHORT).show();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+                            builder.setTitle("Clear Chatroom!");
+                            builder.setMessage("Are you sure you want to clear the chatroom?");
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, int which) {
+                                    ref.removeValue(new DatabaseReference.CompletionListener() {
+                                        @Override
+                                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                            if (databaseError == null) {
+                                                Toast.makeText(getApplicationContext(), "Deleted Successfully.", Toast.LENGTH_SHORT).show();
+                                                FriendlyMessage friendlyMessage = new FriendlyMessage("Welcome to our chatroom", mUsername,
+                                                        mPhotoUrl);
+                                                mFirebaseDatabaseReference.child(MESSAGES_CHILD).push().setValue(friendlyMessage);
+                                                mMessageEditText.setText("");
+                                                dialog.cancel();
+                                            } else {
+                                                Toast.makeText(getApplicationContext(), "Fail to delete.Try again", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        });
-                        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
+                                    });
+                                }
+                            });
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.cancel();
+                                }
+                            });
 
-                        AlertDialog alertDialog = builder.create();
-                        alertDialog.show();
-                    }
-                });
-            }
-            else
-            {
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        }
+                    });
+                } else {
+                    delete.setVisibility(View.GONE);
+                }
+
+            } else {
                 delete.setVisibility(View.GONE);
             }
-
         }
-        else
+        catch (Exception e)
         {
             delete.setVisibility(View.GONE);
         }
@@ -387,6 +389,6 @@ public class ChatActivity extends AppCompatActivity  implements
     public void onBackPressed() {
         super.onBackPressed();
         finish();
-
+        startActivity(new Intent(ChatActivity.this,StartActivity.class));
     }
 }

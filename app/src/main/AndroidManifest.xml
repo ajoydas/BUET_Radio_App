@@ -9,11 +9,11 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:name=".Application.BUETRadio"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -75,6 +75,8 @@
             android:windowSoftInputMode="stateHidden"></activity>
         <activity android:name=".Activity.HelperActivity" />
         <activity android:name=".Activity.EditEvents"></activity>
+        <activity android:name=".Activity.MyIntro"
+            android:label="My Introduction" />
     </application>
 
 </manifest>

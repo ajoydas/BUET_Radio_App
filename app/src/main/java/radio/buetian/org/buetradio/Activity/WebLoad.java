@@ -1,5 +1,6 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -39,6 +40,8 @@ public class WebLoad extends AppCompatActivity {
         value=getIntent().getExtras().getString("Url");
         browser=null;
         load();
+
+
     }
     private void setupDrawer() {
 //        mToolbar = (Toolbar) findViewById(R.id.app_bar);
@@ -56,10 +59,15 @@ public class WebLoad extends AppCompatActivity {
     public void load()
     {
         try {
-
+            final ProgressDialog progressDialog = ProgressDialog.show(WebLoad.this, "Connecting to the Archive..", "Please wait..", true, true);
             browser = (WebView) findViewById(R.id.webView);
             if (browser != null) {
                 browser .setWebViewClient(new WebViewClient() {
+                    @Override
+                    public void onPageFinished(WebView view, String url) {
+                        super.onPageFinished(view, url);
+                        progressDialog.dismiss();
+                    }
                 });
             }
 

@@ -34,7 +34,6 @@ import android.widget.RemoteViews;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.phenotype.Flag;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,10 +43,12 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.sql.SQLOutput;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import radio.buetian.org.buetradio.Application.BUETRadio;
 import radio.buetian.org.buetradio.BuildConfig;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawerPlayer;
@@ -57,12 +58,12 @@ import radio.buetian.org.buetradio.Services.MyNotification;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ImageButton play,stop,record,call;
+    ImageButton play, stop, record, call;
     //Button directory;
-    Button sendsms,chat,request;
-    boolean isPlaying= false;
-    boolean isRecording= false;
-    TextView tplaying,trecording,tcall;
+    Button sendsms, chat, request;
+    boolean isPlaying = false;
+    boolean isRecording = false;
+    TextView tplaying, trecording, tcall;
     private Toolbar mToolbar;
     EditText textSMS;
 
@@ -80,11 +81,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
-        mAuth=FirebaseAuth.getInstance();
-        stream_url=getIntent().getExtras().getString("Stream");
-        channel=getIntent().getExtras().getString("Player");
-        if(!channel.equals(PlayerConnection.getChannel()))
-        {
+        mAuth = FirebaseAuth.getInstance();
+        stream_url = getIntent().getExtras().getString("Stream");
+        channel = getIntent().getExtras().getString("Player");
+        if (!channel.equals(PlayerConnection.getChannel())) {
             PlayerConnection.getMediaPlayer().stop();
             PlayerConnection.setIsRecording(false);
             PlayerConnection.setChannel(channel);
@@ -112,55 +112,48 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(PlayerActivity.this, "Fetch Successfull",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PlayerActivity.this, "Fetch Successfull", Toast.LENGTH_SHORT).show();
                             mFirebaseRemoteConfig.activateFetched();
                         } else {
-                            Toast.makeText(PlayerActivity.this, "Fetch Failed",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PlayerActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
-                        CallNumber=mFirebaseRemoteConfig.getString("CallNumber");
-                        SmsNumber=mFirebaseRemoteConfig.getString("SmsNumber");
+                        CallNumber = mFirebaseRemoteConfig.getString("CallNumber");
+                        SmsNumber = mFirebaseRemoteConfig.getString("SmsNumber");
                     }
                 });
 
-
         PlayerConnection.setUi(true);
-        play= (ImageButton) findViewById(R.id.bPlay);
-        stop= (ImageButton) findViewById(R.id.bStop);
-        record= (ImageButton) findViewById(R.id.bRecord);
-        call= (ImageButton) findViewById(R.id.bCall);
+        play = (ImageButton) findViewById(R.id.bPlay);
+        stop = (ImageButton) findViewById(R.id.bStop);
+        record = (ImageButton) findViewById(R.id.bRecord);
+        call = (ImageButton) findViewById(R.id.bCall);
         //directory= (Button) findViewById(R.id.bDir);
-        sendsms= (Button) findViewById(R.id.bSms);
-        chat= (Button) findViewById(R.id.bChat);
-        request= (Button) findViewById(R.id.bRequest);
+        sendsms = (Button) findViewById(R.id.bSms);
+        chat = (Button) findViewById(R.id.bChat);
+        request = (Button) findViewById(R.id.bRequest);
 
-        textSMS= (EditText) findViewById(R.id.eSms);
-        tplaying= (TextView) findViewById(R.id.tplaying);
-        trecording= (TextView) findViewById(R.id.tRecording);
+        textSMS = (EditText) findViewById(R.id.eSms);
+        tplaying = (TextView) findViewById(R.id.tplaying);
+        trecording = (TextView) findViewById(R.id.tRecording);
         //tcall= (TextView) findViewById(R.id.tCall);
-        tplaying.setText("......Playing "+channel+"......");
-        trecording.setText("......Recording "+channel+"......");
+        tplaying.setText("......Playing " + channel + "......");
+        trecording.setText("......Recording " + channel + "......");
 
-        if(!PlayerConnection.getMediaPlayer().isPlaying())
-        {
+        if (!PlayerConnection.getMediaPlayer().isPlaying()) {
             play.setImageResource(R.drawable.pause);
             tplaying.setVisibility(View.INVISIBLE);
             //trecording.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        } else {
             play.setImageResource(R.drawable.play);
             tplaying.setVisibility(View.VISIBLE);
             tplaying.startAnimation((Animation) AnimationUtils.loadAnimation(PlayerActivity.this, R.anim.translate));
         }
-        if(!PlayerConnection.isRecording())
-        {
+        if (!PlayerConnection.isRecording()) {
+            record.setImageResource(R.drawable.record);
             trecording.setVisibility(View.INVISIBLE);
             //trecording.setVisibility(View.INVISIBLE);
-        }
-        else
-        {
+        } else {
+            record.setImageResource(R.drawable.stoprecord);
             trecording.setVisibility(View.VISIBLE);
             trecording.startAnimation((Animation) AnimationUtils.loadAnimation(PlayerActivity.this, R.anim.translate));
         }
@@ -205,12 +198,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     public void hideKeyboard(View view) {
-        InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 
-    public void showNotification(){
+    public void showNotification() {
         new MyNotification(this);
         //finish();
     }
@@ -234,10 +227,22 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         if (view == play) {
             if (!PlayerConnection.getMediaPlayer().isPlaying()) {
                 try {
-                    progressDialog= ProgressDialog.show(PlayerActivity.this, "Connecting for playing......","Please wait...",true,true);
+                    progressDialog = ProgressDialog.show(PlayerActivity.this, "Connecting for playing......", "Please wait...", true, true);
                     PlayerConnection.getMediaPlayer().reset();
                     PlayerConnection.getMediaPlayer().setDataSource(stream_url);
                     PlayerConnection.getMediaPlayer().prepareAsync();
+                    PlayerConnection.getMediaPlayer().setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                        @Override
+                        public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                            if(progressDialog.isShowing()) {
+                                progressDialog.dismiss();
+                            }
+                            play.setImageResource(R.drawable.pause);
+                            tplaying.setVisibility(View.INVISIBLE);
+                            Toast.makeText(getApplicationContext(), "Broadcast not available.Please check events & connection", Toast.LENGTH_SHORT).show();
+                            return false;
+                        }
+                    });
 
                     PlayerConnection.getMediaPlayer().setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                         @Override
@@ -246,24 +251,23 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
                             //showNotification();
                             Context ctx;
-                            ctx=PlayerActivity.this;
-                            RemoteViews contentView=new RemoteViews(ctx.getPackageName(), R.layout.messageview);
-                            contentView.setTextViewText(R.id.tChannel,"Playing "+PlayerConnection.getChannel());
+                            ctx = PlayerActivity.this;
+                            RemoteViews contentView = new RemoteViews(ctx.getPackageName(), R.layout.messageview);
+                            contentView.setTextViewText(R.id.tChannel, "Playing " + PlayerConnection.getChannel());
                             Intent notificationIntent = new Intent(PlayerActivity.this, HelperActivity.class);
                             PendingIntent contentIntent = PendingIntent.getActivity(PlayerActivity.this, 4, notificationIntent, 0);
-                            contentView.setOnClickPendingIntent(R.id.btn1,contentIntent);
+                            contentView.setOnClickPendingIntent(R.id.btn1, contentIntent);
 
                             long when = System.currentTimeMillis();
                             android.support.v4.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PlayerActivity.this)
                                     .setSmallIcon(R.drawable.icon)
-                                    .setContent(contentView)
                                     .setContentTitle("Buet Radio Online Stream")
                                     .setWhen(when)
+                                    .setCustomBigContentView(contentView)
                                     .setOngoing(true);
 
-                            NotificationManager mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+                            NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                             mNotificationManager.notify(1, notificationBuilder.build());
-
 
 
                             progressDialog.dismiss();
@@ -277,8 +281,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     Toast.makeText(this, "Couldn't Connect", Toast.LENGTH_LONG).show();
                     e.printStackTrace();
                 }
-            }
-            else {
+            } else {
 
                 PlayerConnection.getMediaPlayer().stop();
 
@@ -291,15 +294,15 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
         if (view == record) {
             if (!PlayerConnection.isRecording()) {
-                progressDialog=ProgressDialog.show(PlayerActivity.this, "Connecting for Recording......","Please wait...",true,true);
+                progressDialog = ProgressDialog.show(this, "Connecting for Recording......", "Please wait...", true, true);
                 new Recording().execute();
                 //play.setImageResource(R.drawable.play);
                 //trecording.setVisibility(View.VISIBLE);
                 //trecording.startAnimation((Animation) AnimationUtils.loadAnimation(PlayerActivity.this, R.anim.translate));
-            }
-            else {
+            } else {
                 //play.setImageResource(R.drawable.pause);
                 PlayerConnection.setIsRecording(false);
+                record.setImageResource(R.drawable.record);
                 trecording.clearAnimation();
                 trecording.setVisibility(View.INVISIBLE);
             }
@@ -311,6 +314,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             PlayerConnection.getMediaPlayer().stop();
             PlayerConnection.setIsRecording(false);
             play.setImageResource(R.drawable.pause);
+            record.setImageResource(R.drawable.record);
             tplaying.clearAnimation();
             tplaying.setVisibility(View.INVISIBLE);
             trecording.clearAnimation();
@@ -318,7 +322,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
         if (view == call) {
 
-            if(PlayerConnection.isRecording()) {
+            if (PlayerConnection.isRecording()) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(PlayerActivity.this);
                 builder.setTitle("Call Us.");
                 builder.setMessage("Your recording will be aborted.You can download the show from the archive.Proceed?");
@@ -330,7 +334,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                         try {
                             startActivity(callIntent);
                         } catch (Exception e) {
-                            Toast.makeText(PlayerActivity.this, "Call Permission Denied!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PlayerActivity.this, "Call Permission Denied!", Toast.LENGTH_LONG).show();
                         }
                         dialog.cancel();
                     }
@@ -344,9 +348,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
-            }
-            else
-            {
+            } else {
                 Intent callIntent = new Intent(Intent.ACTION_CALL);
                 callIntent.setData(Uri.parse(CallNumber));
                 try {
@@ -381,34 +383,26 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
         }
 
-        if (view==chat)
-        {
-            if(mAuth.getCurrentUser()!=null)
-            {
-                Intent intent=new Intent(PlayerActivity.this,ChatActivity.class);
+        if (view == chat) {
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(PlayerActivity.this, ChatActivity.class);
                 //finish();
                 startActivity(intent);
-            }
-            else
-            {
-                Intent intent=new Intent(PlayerActivity.this,SignInActivity.class);
-                intent.putExtra("From","Chatroom");
+            } else {
+                Intent intent = new Intent(PlayerActivity.this, SignInActivity.class);
+                intent.putExtra("From", "Chatroom");
                 //finish();
                 startActivity(intent);
             }
         }
-        if (view==request)
-        {
-            if(mAuth.getCurrentUser()!=null)
-            {
-                Intent intent=new Intent(PlayerActivity.this,RequestActivity.class);
+        if (view == request) {
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(PlayerActivity.this, RequestActivity.class);
                 //finish();
                 startActivity(intent);
-            }
-            else
-            {
-                Intent intent=new Intent(PlayerActivity.this,SignInActivity.class);
-                intent.putExtra("From","Request");
+            } else {
+                Intent intent = new Intent(PlayerActivity.this, SignInActivity.class);
+                intent.putExtra("From", "Request");
                 //finish();
                 startActivity(intent);
             }
@@ -416,8 +410,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        progressDialog.dismiss();
+    }
 
-/*
+    /*
         if(view==directory)
         {
             *//*Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/BuetRadioRecord/");
@@ -461,9 +460,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
         }*/
 
-    void update()
-    {
-        progressDialog.dismiss();
+    void update() {
+        if(progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+        record.setImageResource(R.drawable.stoprecord);
         trecording.setVisibility(View.VISIBLE);
         trecording.startAnimation((Animation) AnimationUtils.loadAnimation(PlayerActivity.this, R.anim.translate));
 
@@ -486,28 +487,39 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 PlayerConnection.setInputStream(response.body().byteStream());
                 PlayerConnection.setIsRecording(true);
 
-                if(PlayerConnection.isUi())
-                {
-                   publishProgress();
+                boolean firstTime = true;
+
+                int c;
+                while ((c = PlayerConnection.getInputStream().read()) != -1 && PlayerConnection.isRecording()) {
+
+                    if (firstTime) {
+                        firstTime = false;
+                        Boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+
+                        String fileName = File.separator + "radio_" + "recording_" + System.currentTimeMillis();
+                        String outputSource;
+                        if (createDirIfNotExists("BuetRadioRecords")) {
+                            if (isSDPresent) {
+                                outputSource = Environment.getExternalStorageDirectory() + "/BuetRadioRecords" + fileName;
+
+                            } else {
+                                outputSource = Environment.getDataDirectory() + "/BuetRadioRecords" + fileName;
+                            }
+                            PlayerConnection.setFileOutputStream(new FileOutputStream(outputSource + ".mp3"));
+
+                            if (PlayerConnection.isUi()) {
+                                publishProgress();
+                            }
+                        } else {
+                            System.out.println("Closed Recording......2.");
+                            break;
+                        }
+                    }
+                    if(progressDialog.isShowing()) {
+                        progressDialog.dismiss();
+                    }
+                    PlayerConnection.getFileOutputStream().write(c);
                 }
-
-                Boolean isSDPresent = android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-
-                String fileName = File.separator + "radio_" + "recording_" + System.currentTimeMillis();
-                String outputSource;
-                if(createDirIfNotExists("BuetRadioRecords")) {
-                    if (isSDPresent) {
-                        outputSource = Environment.getExternalStorageDirectory() + "/BuetRadioRecords" + fileName;
-
-                    } else {
-                        outputSource = Environment.getDataDirectory() + fileName;
-                    }
-                    PlayerConnection.setFileOutputStream(new FileOutputStream(outputSource + ".mp3"));
-
-                    int c;
-                    while ((c = PlayerConnection.getInputStream().read()) != -1 && PlayerConnection.isRecording()) {
-                        PlayerConnection.getFileOutputStream().write(c);
-                    }
                 /*int bytesRead = 0;
                 int bytes;
                 while (((bytes = inputStream.read()) != -1) && isRecording) {
@@ -526,19 +538,22 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                         break;
                     }
                 }*/
-                    System.out.println("Closed Recording.......");
-                    PlayerConnection.getInputStream().close();
+                System.out.println("Closed Recording.......");
+                PlayerConnection.getInputStream().close();
+                try {
                     PlayerConnection.getFileOutputStream().close();
                 }
-                else
+                catch (Exception e)
                 {
-                    System.out.println("Closed Recording......2.");
-                    //Toast.makeText(getApplicationContext(),"Folder can't be created.Please check your storage space & Try again.",Toast.LENGTH_LONG).show();
+                    System.out.println("Output stream error on close");
                 }
 
                 return null;
 
             } catch (IOException e) {
+                if(progressDialog.isShowing()) {
+                    progressDialog.dismiss();
+                }
                 System.out.println("Closed Recording.......3");
                 e.printStackTrace();
                 //Toast.makeText(getApplicationContext(),"Recording can't be started.Please check your connection, storage space & Try again.",Toast.LENGTH_LONG).show();
@@ -647,86 +662,65 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     public void onDrawerSlide(float slideOffset) {
 
     }
+
     public void onDrawerItemClicked(int index) {
         if (index == 0) {
 
-            if(mAuth.getCurrentUser()!=null)
-            {
-                Intent intent=new Intent(getApplicationContext(),ProfileActivity.class);
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(getApplicationContext(), ProfileActivity.class);
+                finish();
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.putExtra("From", "Signin");
                 finish();
                 startActivity(intent);
             }
-            else
-            {
-                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
-                intent.putExtra("From","Signin");
-                finish();
+        } else if (index == 1) {
+            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+            intent.putExtra("Stream", "http://87.117.217.103:38164");
+            intent.putExtra("Player", "Channel 1");
+            finish();
+            startActivity(intent);
+        } else if (index == 2) {
+            Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
+            intent.putExtra("Stream", "http://87.117.217.103:38164");
+            intent.putExtra("Player", "Channel 2");
+            finish();
+            startActivity(intent);
+        } else if (index == 3) {
+            Intent intent = new Intent(getApplicationContext(), WebLoad.class);
+            intent.putExtra("Url", "https://soundcloud.com/buet-radio");
+            finish();
+            startActivity(intent);
+        } else if (index == 4) {
+            Intent intent = new Intent(getApplicationContext(), WebLoad.class);
+            intent.putExtra("Url", "http://buetradio.com/archive.html");
+            finish();
+            startActivity(intent);
+        } else if (index == 5) {
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
+                //finish();
                 startActivity(intent);
-            }
-        }else if(index==1)
-        {
-            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
-            intent.putExtra("Player","Channel 1");
-            finish();
-            startActivity(intent);
-        }
-        else if(index==2)
-        {
-            Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
-            intent.putExtra("Player","Channel 2");
-            finish();
-            startActivity(intent);
-        }
-        else if(index==3)
-        {
-            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
-            intent.putExtra("Url","https://soundcloud.com/buet-radio");
-            finish();
-            startActivity(intent);
-        }
-        else if(index==4)
-        {
-            Intent intent=new Intent(getApplicationContext(),WebLoad.class);
-            intent.putExtra("Url","http://buetradio.com/archive.html");
-            finish();
-            startActivity(intent);
-        }
-        else if (index==5)
-        {
-            if(mAuth.getCurrentUser()!=null)
-            {
-                Intent intent=new Intent(getApplicationContext(),ChatActivity.class);
+            } else {
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.putExtra("From", "Chatroom");
                 //finish();
                 startActivity(intent);
             }
-            else
-            {
-                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
-                intent.putExtra("From","Chatroom");
+        } else if (index == 6) {
+            if (mAuth.getCurrentUser() != null) {
+                Intent intent = new Intent(getApplicationContext(), RequestActivity.class);
+                //finish();
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.putExtra("From", "Request");
                 //finish();
                 startActivity(intent);
             }
-        }
-        else if (index==6)
-        {
-            if(mAuth.getCurrentUser()!=null)
-            {
-                Intent intent=new Intent(getApplicationContext(),RequestActivity.class);
-                //finish();
-                startActivity(intent);
-            }
-            else
-            {
-                Intent intent=new Intent(getApplicationContext(),SignInActivity.class);
-                intent.putExtra("From","Request");
-                //finish();
-                startActivity(intent);
-            }
-        }
-        else if (index==7)
-        {
+        } else if (index == 7) {
             try {
                 startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + "appinventor.ai_ppd1994.buetradioblue")));
             } catch (android.content.ActivityNotFoundException anfe) {
@@ -734,7 +728,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
     }
-
 
 
 }

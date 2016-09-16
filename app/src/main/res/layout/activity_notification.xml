@@ -46,12 +46,14 @@
 
                     <TextView
                         android:id="@+id/tMessage"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="20dp"
                         android:text="New Notification!"
-                        android:textSize="18dp" />
+                        android:textSize="18dp"
+                        android:layout_margin="20dp"
+                        android:textColor="#000000" />
 
                     <Button
                         android:layout_width="wrap_content"
@@ -60,7 +62,6 @@
                         android:id="@+id/bOption"
                         android:layout_below="@+id/tMessage"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginTop="43dp"
                         style="@style/Widget.AppCompat.Button.Colored"/>
                 </RelativeLayout>
             </ScrollView>

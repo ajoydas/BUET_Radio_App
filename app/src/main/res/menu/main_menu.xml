@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/fbpage_menu"
+        android:title="Our Facebook Page"/>
+    <item
+        android:id="@+id/invite_menu"
+        android:title="Invite others"/>
+    <item
+        android:id="@+id/exit_menu"
+        android:title="Exit"/>
+</menu>

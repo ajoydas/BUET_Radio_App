@@ -60,7 +60,7 @@ public class FragmentDrawerNotification extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mUserLearnedDrawer = BUETRadio.readFromPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, false);
+        mUserLearnedDrawer = BUETRadio.readFromPreferences(getActivity(), KEY_USER_LEARNED_DRAWER, true);
         mFromSavedInstanceState = savedInstanceState != null ? true : false;
     }
 

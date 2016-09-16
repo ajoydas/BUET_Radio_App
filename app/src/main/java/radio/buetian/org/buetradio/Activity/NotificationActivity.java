@@ -63,25 +63,29 @@ public class NotificationActivity extends AppCompatActivity {
             //System.out.println(mAuth.getCurrentUser().getEmail());
             //System.out.println("Events Auth"+ref.getAuth());
             //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
-            if(mAuth.getCurrentUser()!=null) {
-                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
-                    option.setVisibility(View.VISIBLE);
-                    option.setText("Edit");
-                    option.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            //Todo edit
-                            finish();
-                            startActivity(new Intent(NotificationActivity.this,EditEvents.class));
+            try {
+                if (mAuth.getCurrentUser() != null) {
+                    if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                        option.setVisibility(View.VISIBLE);
+                        option.setText("Edit");
+                        option.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                //Todo edit
+                                finish();
+                                startActivity(new Intent(NotificationActivity.this, EditEvents.class));
 
-                        }
-                    });
-                }
-                else {
+                            }
+                        });
+                    } else {
+                        option.setVisibility(View.INVISIBLE);
+                    }
+                } else {
                     option.setVisibility(View.INVISIBLE);
                 }
             }
-            else {
+            catch (Exception e)
+            {
                 option.setVisibility(View.INVISIBLE);
             }
 
@@ -103,7 +107,7 @@ public class NotificationActivity extends AppCompatActivity {
         {
             option.setVisibility(View.GONE);
             header.setText("Info: ");
-            message.setText("Buet Radio\n Buet Radio\nBuet Radio\n");
+            message.setText("BUET Radio is a community radio run by the students of Bangladesh University of Engineering & Technology. This radio will be on air on every wednesday(the Chan Raat of BUET) at 10 pm and is hoping to broadcast the events of BUET.");
 
         }
         else if(from.equals("Requests"))
@@ -114,22 +118,24 @@ public class NotificationActivity extends AppCompatActivity {
             //System.out.println(mAuth.getCurrentUser().getEmail());
             //System.out.println("Events Auth"+ref.getAuth());
             //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
-            if(mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com"))
-            {
-                option.setVisibility(View.VISIBLE);
-                option.setText("Clear All");
-                option.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Todo edit
-                    }
-                });
+            try {
+                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                    option.setVisibility(View.VISIBLE);
+                    option.setText("Clear All");
+                    option.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            //Todo edit
+                        }
+                    });
+                } else {
+                    option.setVisibility(View.GONE);
+                }
             }
-            else
+            catch (Exception e)
             {
                 option.setVisibility(View.GONE);
             }
-
             ref.addChildEventListener(new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -186,7 +192,7 @@ public class NotificationActivity extends AppCompatActivity {
 //        mToolbar = (Toolbar) findViewById(R.id.app_bar);
 //        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
         //set the Toolbar as ActionBar
-        setSupportActionBar(mToolbar);
+        //setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //setup the NavigationDrawer
         mDrawerFragment = (FragmentDrawerNotification)
