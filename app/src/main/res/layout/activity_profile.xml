@@ -43,27 +43,6 @@
             android:text="Email"
             android:textSize="15dp" />
 
-        <Button
-            android:id="@+id/bLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Log Out"
-            android:layout_marginBottom="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/tEmail"
-            android:layout_toStartOf="@+id/tEmail"
-            style="@style/Widget.AppCompat.Button.Colored"/>
-
-        <Button
-            android:id="@+id/bChat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Chat"
-            android:layout_alignTop="@+id/bLogout"
-            android:layout_toRightOf="@+id/tName"
-            android:layout_toEndOf="@+id/tName"
-            style="@style/Widget.AppCompat.Button.Colored"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -73,5 +52,36 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:textColor="@color/colorAccent" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="25dp">
+
+            <Button
+                android:id="@+id/bLogout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Log Out"
+
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_alignParentBottom="true"
+                android:layout_weight="0.5" />
+
+            <Button
+                android:id="@+id/bChat"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Chat"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_alignBaseline="@+id/bLogout"
+                android:layout_alignBottom="@+id/bLogout"
+                android:layout_centerHorizontal="true"
+                android:layout_weight="0.5" />
+        </LinearLayout>
+
     </RelativeLayout>
 </LinearLayout>

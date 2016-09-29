@@ -128,7 +128,6 @@ public class SignInActivity extends AppCompatActivity implements MainFragment.On
         signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 signIn();
 
             }

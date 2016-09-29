@@ -1,6 +1,7 @@
 package radio.buetian.org.buetradio.Activity;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -16,10 +17,13 @@ import radio.buetian.org.buetradio.R;
  */
 public class MyIntro extends AppIntro {
 
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        progressDialog = ProgressDialog.show(MyIntro.this, "Welcome to BUET RADIO....", "Please wait..", true, true);
         //askForPermissions(new String[]{Manifest.permission.CAMERA}, 2);
 
 
@@ -45,7 +49,13 @@ public class MyIntro extends AppIntro {
         // Override bar/separator color.
         //setBarColor(Color.parseColor("#3F51B5"));
         //setSeparatorColor(Color.parseColor("#2196F3"));
-
+        try{
+            progressDialog.dismiss();
+        }
+        catch (Exception e)
+        {
+            System.out.println("My intro progress bar paused failed");
+        }
         // Hide Skip/Done button.
         showSkipButton(true);
         setProgressButtonEnabled(true);
@@ -54,6 +64,18 @@ public class MyIntro extends AppIntro {
         // NOTE: you will probably need to ask VIBRATE permisssion in Manifest.
         //setVibrate(true);
        // setVibrateIntensity(30);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        try{
+            progressDialog.dismiss();
+        }
+        catch (Exception e)
+        {
+            System.out.println("My intro progress bar paused failed");
+        }
     }
 
     @Override

@@ -44,7 +44,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_weight="0.33"
                     android:src="@drawable/record"
-                    android:background="#fcfcfc" />
+                    android:background="@null" />
 
                 <ImageButton
                     android:id="@+id/bPlay"
@@ -53,7 +53,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_weight="0.33"
                     android:src="@drawable/pause"
-                    android:background="#fcfcfc" />
+                    android:background="@null" />
 
                 <ImageButton
                     android:id="@+id/bStop"
@@ -62,7 +62,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_weight="0.33"
                     android:src="@drawable/stop"
-                    android:background="#fcfcfc" />
+                    android:background="@null" />
 
             </LinearLayout>
 

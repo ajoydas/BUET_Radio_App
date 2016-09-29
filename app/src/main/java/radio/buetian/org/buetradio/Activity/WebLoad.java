@@ -21,6 +21,8 @@ import radio.buetian.org.buetradio.Application.BUETRadio;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawerWebLoad;
 import radio.buetian.org.buetradio.R;
 
+import static radio.buetian.org.buetradio.R.id.webView;
+
 public class WebLoad extends AppCompatActivity {
     protected FrameLayout webViewPlaceholder;
     private Toolbar mToolbar;
@@ -28,6 +30,7 @@ public class WebLoad extends AppCompatActivity {
     String value=null;
     private FirebaseAuth mAuth;
     private FragmentDrawerWebLoad mDrawerFragment;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +43,6 @@ public class WebLoad extends AppCompatActivity {
         value=getIntent().getExtras().getString("Url");
         browser=null;
         load();
-
 
     }
     private void setupDrawer() {
@@ -59,8 +61,8 @@ public class WebLoad extends AppCompatActivity {
     public void load()
     {
         try {
-            final ProgressDialog progressDialog = ProgressDialog.show(WebLoad.this, "Connecting to the Archive..", "Please wait..", true, true);
-            browser = (WebView) findViewById(R.id.webView);
+            progressDialog = ProgressDialog.show(WebLoad.this, "Connecting to the Archive..", "Please wait..", true, true);
+            browser = (WebView) findViewById(webView);
             if (browser != null) {
                 browser .setWebViewClient(new WebViewClient() {
                     @Override
@@ -129,13 +131,50 @@ public class WebLoad extends AppCompatActivity {
         // Restore the state of the WebView
         browser.restoreState(savedInstanceState);
     }*/
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        try {
+            if(browser!=null) {
+                browser.stopLoading();
+                browser.onPause();
+                browser.pauseTimers();
+                //browser.destroy();
+
+            }
+            progressDialog.dismiss();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Can't end progress dialog in player");
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         if (browser.canGoBack()) {
             browser.goBack();
         } else {
             super.onBackPressed();
-            browser.destroy();
+
+            try {
+                if(browser!=null) {
+                    browser.loadUrl("about:blank");
+                    browser.stopLoading();
+                    browser.onPause();
+                    browser.pauseTimers();
+                    //browser.destroy();
+
+                }
+                progressDialog.dismiss();
+            }
+            catch (Exception e)
+            {
+                System.out.println("Can't end progress dialog in player");
+            }
             finish();
         }
     }

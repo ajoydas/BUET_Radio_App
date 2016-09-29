@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:text="Playing...."
                 android:id="@+id/tChannel"
-                android:textSize="12dp" />
+                android:textSize="12dp"
+                android:textColor="@color/colorAccent" />
 
             <Button
                 android:layout_width="50dp"

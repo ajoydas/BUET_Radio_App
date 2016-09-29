@@ -117,8 +117,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                         } else {
                             //Toast.makeText(PlayerActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
+                        
                         CallNumber = mFirebaseRemoteConfig.getString("CallNumber");
                         SmsNumber = mFirebaseRemoteConfig.getString("SmsNumber");
+
                     }
                 });
 
@@ -413,7 +415,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
-        progressDialog.dismiss();
+        try {
+            progressDialog.dismiss();
+        }
+        catch (Exception e)
+        {
+            System.out.println("Can't end progress dialog in player");
+        }
     }
 
     /*
@@ -655,7 +663,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     public void onBackPressed() {
         super.onBackPressed();
         PlayerConnection.setUi(false);
-        finish();
+        try {
+            progressDialog.dismiss();
+        }
+        catch (Exception e) {
+            System.out.println("Can't end progress dialog in player");
+        }
+            finish();
     }
 
 

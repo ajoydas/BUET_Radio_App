@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import radio.buetian.org.buetradio.Adapter.GridviewAdapter;
 import radio.buetian.org.buetradio.BuildConfig;
 import radio.buetian.org.buetradio.Fragment.FragmentDrawer;
+import radio.buetian.org.buetradio.Objects.PlayerConnection;
 import radio.buetian.org.buetradio.R;
 
 public class StartActivity extends AppCompatActivity {
@@ -80,21 +81,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
-
-        //Redirect to notification
-        try {
-            if (getIntent().getExtras().getString("Message") != null) {
-                Intent intent = new Intent(this, NotificationActivity.class);
-                intent.putExtra("From","Notification");
-                intent.putExtra("Message", getIntent().getExtras().getString("Message"));
-                finish();
-                startActivity(intent);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
         //Showing Intro
 
         Thread t = new Thread(new Runnable() {
@@ -125,6 +111,21 @@ public class StartActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+
+        //Redirect to notification
+        try {
+            if (getIntent().getExtras().getString("Message") != null) {
+                Intent intent = new Intent(this, NotificationActivity.class);
+                intent.putExtra("From","Notification");
+                intent.putExtra("Message", getIntent().getExtras().getString("Message"));
+                finish();
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 
@@ -193,6 +194,10 @@ public class StartActivity extends AppCompatActivity {
                 if(position==0)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
+                    if(StreamUrl1.equals("")||StreamUrl1==null)
+                    {
+                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
+                    }
                     intent.putExtra("Stream",StreamUrl1);
                     intent.putExtra("Player","Channel 1");
                     //finish();
@@ -201,6 +206,10 @@ public class StartActivity extends AppCompatActivity {
                 else if(position==1)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
+                    if(StreamUrl1.equals("")||StreamUrl1==null)
+                    {
+                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
+                    }
                     intent.putExtra("Stream",StreamUrl2);
                     intent.putExtra("Player","Channel 2");
                     //finish();
@@ -227,14 +236,14 @@ public class StartActivity extends AppCompatActivity {
                     if(mAuth.getCurrentUser()!=null)
                     {
                         Intent intent=new Intent(StartActivity.this,ChatActivity.class);
-                        //finish();
+                        finish();
                         startActivity(intent);
                     }
                     else
                     {
                         Intent intent=new Intent(StartActivity.this,SignInActivity.class);
                         intent.putExtra("From","Chatroom");
-                        //finish();
+                        finish();
                         startActivity(intent);
                     }
                 }
@@ -287,7 +296,7 @@ public class StartActivity extends AppCompatActivity {
                 else if (position==9)
                 {
                     final CharSequence[] items = { "Call Us", "Email Us",
-                            "Cancel" };
+                             };
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(StartActivity.this);
                     builder.setTitle("Contact Us!");
@@ -583,7 +592,14 @@ public class StartActivity extends AppCompatActivity {
             case R.id.exit_menu:
                 NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                 notificationManager.cancelAll();
-                System.exit(0);
+                //System.exit(0);
+                PlayerConnection.getMediaPlayer().stop();
+                PlayerConnection.setIsRecording(false);
+
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
                 return true;
             case R.id.fbpage_menu:
                 Intent facebookIntent = new Intent(Intent.ACTION_VIEW);
@@ -613,7 +629,15 @@ public class StartActivity extends AppCompatActivity {
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.cancelAll();
 
-            System.exit(0);
+            PlayerConnection.getMediaPlayer().stop();
+            PlayerConnection.setIsRecording(false);
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+//            finish();
+//            android.os.Process.killProcess(android.os.Process.myPid());
+            //System.exit(0);
             return;
         }
 

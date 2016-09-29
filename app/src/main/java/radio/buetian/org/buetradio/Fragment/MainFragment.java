@@ -167,6 +167,15 @@ public class MainFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         loginButton = (LoginButton) view.findViewById(R.id.login_button);
+
+        //extra
+//        loginButton.setBackgroundResource(R.drawable.icon);
+//        loginButton.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+//        loginButton.setCompoundDrawablePadding(0);
+//        loginButton.setPadding(0, 0, 0, 0);
+//        loginButton.setText("");
+        //extra end
+
         loginButton.setReadPermissions("email", "public_profile");
         loginButton.setFragment(this);
 

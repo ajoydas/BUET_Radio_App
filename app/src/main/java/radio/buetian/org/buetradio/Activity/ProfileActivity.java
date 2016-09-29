@@ -74,7 +74,13 @@ public class ProfileActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         protected Object doInBackground(Object[] objects) {
-            bm=getImageBitmap(firebase.getCurrentUser().getPhotoUrl().toString());
+            try {
+                bm = getImageBitmap(firebase.getCurrentUser().getPhotoUrl().toString());
+            }
+            catch (Exception e)
+            {
+                System.out.println("Profile pic fetch error.");
+            }
             return null;
         }
 

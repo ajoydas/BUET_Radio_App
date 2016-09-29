@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "413306105383-csjjqkqvhvfs07n2dv7usgaq5msu2gvk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "radio.buetian.org.buetradio",
+            "certificate_hash": "CFC3062C2E9246BD0F3B4E2482170A8EC04D1B8F"
+          }
+        },
+        {
+          "client_id": "413306105383-gc8lgua4bkta8j262jd1jo9564g99fig.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "radio.buetian.org.buetradio",
+            "certificate_hash": "BC41E49317641C628A11B8981D1CEE8780965B29"
+          }
+        },
+        {
           "client_id": "413306105383-74jgq8tlaugc3t53uphok0nrfiviat8c.apps.googleusercontent.com",
           "client_type": 3
         }
