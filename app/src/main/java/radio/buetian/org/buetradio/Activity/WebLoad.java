@@ -202,7 +202,7 @@ public class WebLoad extends AppCompatActivity {
         }else if(index==1)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
+            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 1");
             finish();
             startActivity(intent);
@@ -210,7 +210,7 @@ public class WebLoad extends AppCompatActivity {
         else if(index==2)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
+            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 2");
             finish();
             startActivity(intent);

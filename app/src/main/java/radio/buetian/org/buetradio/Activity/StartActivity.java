@@ -1,5 +1,6 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.Manifest;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,15 +10,18 @@ import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.telephony.PhoneStateListener;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
@@ -51,17 +55,9 @@ import radio.buetian.org.buetradio.R;
 
 public class StartActivity extends AppCompatActivity {
 
-    private Button play, stop, record, signin, signup;
-    private MediaPlayer mPlayer;
-    private String stream_url = "http://87.117.217.103:38164";
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
 
-    private InputStream inputStream;
-    private FileOutputStream fileOutputStream;
-    private String outputSource;
-    private MediaRecorder mediaRecorder;
-    private long startTime;
-    private boolean isRecording;
-    private long stopTime;
+
     private Toolbar mToolbar;
     private ViewGroup mContainerToolbar;
     private FragmentDrawer mDrawerFragment;
@@ -77,6 +73,8 @@ public class StartActivity extends AppCompatActivity {
     private String StreamUrl1;
     private String StreamUrl2;
     private String ContactNumber;
+    private Intent callIntent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -145,6 +143,11 @@ public class StartActivity extends AppCompatActivity {
         mFirebaseRemoteConfig.setConfigSettings(configSettings);
         mFirebaseRemoteConfig.setDefaults(R.xml.remote_config_defaults);
 
+        PlayerConnection.setChannel1(mFirebaseRemoteConfig.getString("Channel1"));
+        PlayerConnection.setChannel2(mFirebaseRemoteConfig.getString("Channel2"));
+        PlayerConnection.setContactNumber(mFirebaseRemoteConfig.getString("ContactNumber"));
+        PlayerConnection.setCallNumber(mFirebaseRemoteConfig.getString("CallNumber"));
+        PlayerConnection.setSmsNumber(mFirebaseRemoteConfig.getString("SmsNumber"));
 
         mFirebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -156,9 +159,11 @@ public class StartActivity extends AppCompatActivity {
                         } else {
                             //Toast.makeText(StartActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
                         }
-                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
-                        StreamUrl2=mFirebaseRemoteConfig.getString("Channel2");
-                        ContactNumber=mFirebaseRemoteConfig.getString("ContactNumber");
+                        PlayerConnection.setChannel1(mFirebaseRemoteConfig.getString("Channel1"));
+                        PlayerConnection.setChannel2(mFirebaseRemoteConfig.getString("Channel2"));
+                        PlayerConnection.setContactNumber(mFirebaseRemoteConfig.getString("ContactNumber"));
+                        PlayerConnection.setCallNumber(mFirebaseRemoteConfig.getString("CallNumber"));
+                        PlayerConnection.setSmsNumber(mFirebaseRemoteConfig.getString("SmsNumber"));
                     }
                 });
 
@@ -194,11 +199,11 @@ public class StartActivity extends AppCompatActivity {
                 if(position==0)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-                    if(StreamUrl1.equals("")||StreamUrl1==null)
-                    {
-                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
-                    }
-                    intent.putExtra("Stream",StreamUrl1);
+//                    if(StreamUrl1.equals("")||StreamUrl1==null)
+//                    {
+//                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
+//                    }
+//                    intent.putExtra("Stream",StreamUrl1);
                     intent.putExtra("Player","Channel 1");
                     //finish();
                     startActivity(intent);
@@ -206,11 +211,11 @@ public class StartActivity extends AppCompatActivity {
                 else if(position==1)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-                    if(StreamUrl1.equals("")||StreamUrl1==null)
-                    {
-                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
-                    }
-                    intent.putExtra("Stream",StreamUrl2);
+//                    if(StreamUrl1.equals("")||StreamUrl1==null)
+//                    {
+//                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
+//                    }
+//                    intent.putExtra("Stream",StreamUrl2);
                     intent.putExtra("Player","Channel 2");
                     //finish();
                     startActivity(intent);
@@ -305,20 +310,13 @@ public class StartActivity extends AppCompatActivity {
                         public void onClick(DialogInterface dialog, int item) {
                             if (items[item].equals("Call Us")) {
                                 //System.out.println("Call us clicked");
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse(ContactNumber));
-                                try {
-                                    startActivity(callIntent);
-                                }
-                                catch (Exception e)
-                                {
-                                    Toast.makeText(StartActivity.this,"Call Permission Denied!",Toast.LENGTH_SHORT).show();
-                                }
+                                dialog.dismiss();
+                                makeCallfunc();
                             } else if (items[item].equals("Email Us")) {
                                 //System.out.println("Email us clicked");
                                 Intent i = new Intent(Intent.ACTION_SEND);
                                 i.setType("message/rfc822");
-                                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"1405079.ad@ugrad.cse.buet.ac.bd"});
+                                i.putExtra(Intent.EXTRA_EMAIL  , new String[]{"buetradio@gmail.com"});
                                 i.putExtra(Intent.EXTRA_SUBJECT, "Contact");
                                 i.putExtra(Intent.EXTRA_TEXT   , "Please write here");
                                 try {
@@ -347,41 +345,58 @@ public class StartActivity extends AppCompatActivity {
 
         //animate the Toolbar when it comes into the picture
         //AnimationUtils.animateToolbarDroppingDown(mContainerToolbar);
-/*
-
-
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "radio.buetian.org.buetradio", PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-
-        } catch (NoSuchAlgorithmException e) {
-
-        }
-
-        play = (Button) findViewById(R.id.bPlay);
-        stop = (Button) findViewById(R.id.bStop);
-        record = (Button) findViewById(R.id.bRecord);
-        signin = (Button) findViewById(R.id.bSignin);
-
-        mPlayer = new MediaPlayer();
-        //outputSource=new File("BuetRadio.mp3");
-        play.setOnClickListener(this);
-        stop.setOnClickListener(this);
-        record.setOnClickListener(this);
-        signin.setOnClickListener(this);
-
-
-*/
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted!
+                    // Perform the action
+                    startActivity(callIntent);
+                } else {
+                    // Permission was denied
+                    // :(
+                    // Gracefully handle the denial
+                    Toast.makeText(StartActivity.this, "Requesting Call Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
 
+        }
+    }
+
+    void makeCallfunc()
+    {
+        callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(PlayerConnection.getCallNumber()));
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    // We will need to request the permission
+                    System.out.println("Inside version Requesting.....");
+
+                    System.out.println("Requesting.....");
+                    ActivityCompat.requestPermissions(StartActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
+                    // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an app-defined int constant
+                } else {
+                    // The permission is granted, we can perform the action
+                    startActivity(callIntent);
+                }
+            }
+            else
+            {
+                startActivity(callIntent);
+            }
+        } catch (Exception e) {
+            Toast.makeText(StartActivity.this, "Call Permission Denied!", Toast.LENGTH_LONG).show();
+        }
+    }
 
     public void prepareList() {
         listMenuItem = new ArrayList<String>();
@@ -392,7 +407,7 @@ public class StartActivity extends AppCompatActivity {
         listMenuItem.add("Archive");
         listMenuItem.add("Chat Room");
         listMenuItem.add("Events");
-        listMenuItem.add("Login");
+        listMenuItem.add("SignIn");
         listMenuItem.add("Request");
         listMenuItem.add("Info");
         listMenuItem.add("Contact Us");
@@ -461,7 +476,7 @@ public class StartActivity extends AppCompatActivity {
         }else if(index==1)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
+            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 1");
             //finish();
             startActivity(intent);
@@ -469,7 +484,7 @@ public class StartActivity extends AppCompatActivity {
         else if(index==2)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
+            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 2");
             //finish();
             startActivity(intent);
@@ -606,6 +621,25 @@ public class StartActivity extends AppCompatActivity {
                 String facebookUrl = getFacebookPageURL(this);
                 facebookIntent.setData(Uri.parse(facebookUrl));
                 startActivity(facebookIntent);
+                return true;
+            case R.id.remoteconfig_menu:
+                mFirebaseRemoteConfig.fetch(0)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(StartActivity.this, "Fetch Successfull", Toast.LENGTH_SHORT).show();
+                                    mFirebaseRemoteConfig.activateFetched();
+                                } else {
+                                    Toast.makeText(StartActivity.this, "Fetch Failed! Please Try Again.", Toast.LENGTH_SHORT).show();
+                                }
+                                PlayerConnection.setChannel1(mFirebaseRemoteConfig.getString("Channel1"));
+                                PlayerConnection.setChannel2(mFirebaseRemoteConfig.getString("Channel2"));
+                                PlayerConnection.setContactNumber(mFirebaseRemoteConfig.getString("ContactNumber"));
+                                PlayerConnection.setCallNumber(mFirebaseRemoteConfig.getString("CallNumber"));
+                                PlayerConnection.setSmsNumber(mFirebaseRemoteConfig.getString("SmsNumber"));
+                            }
+                        });
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

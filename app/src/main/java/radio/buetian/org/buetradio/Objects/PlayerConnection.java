@@ -16,6 +16,54 @@ public class PlayerConnection {
     private static String channel="Channel 1";
     private static boolean ui=false;
 
+    //remotes
+    private static String Channel1=null;
+    private static String Channel2=null;
+    private static String ContactNumber=null;
+    private static String CallNumber=null;
+
+    public static String getSmsNumber() {
+        return SmsNumber;
+    }
+
+    public static void setSmsNumber(String smsNumber) {
+        SmsNumber = smsNumber;
+    }
+
+    public static String getChannel1() {
+        return Channel1;
+    }
+
+    public static void setChannel1(String channel1) {
+        Channel1 = channel1;
+    }
+
+    public static String getChannel2() {
+        return Channel2;
+    }
+
+    public static void setChannel2(String channel2) {
+        Channel2 = channel2;
+    }
+
+    public static String getContactNumber() {
+        return ContactNumber;
+    }
+
+    public static void setContactNumber(String contactNumber) {
+        ContactNumber = contactNumber;
+    }
+
+    public static String getCallNumber() {
+        return CallNumber;
+    }
+
+    public static void setCallNumber(String callNumber) {
+        CallNumber = callNumber;
+    }
+
+    private static String SmsNumber=null;
+
     public static String getChannel() {
         return channel;
     }

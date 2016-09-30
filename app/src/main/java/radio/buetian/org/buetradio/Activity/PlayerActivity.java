@@ -1,5 +1,6 @@
 package radio.buetian.org.buetradio.Activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,11 +8,15 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +63,9 @@ import radio.buetian.org.buetradio.Services.MyNotification;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int MY_PERMISSIONS_REQUEST_CALL_PHONE = 123;
+    private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 231;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE =321 ;
     ImageButton play, stop, record, call;
     //Button directory;
     Button sendsms, chat, request;
@@ -76,13 +84,18 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private ViewGroup mContainerToolbar;
     private FragmentDrawerPlayer mDrawerFragment;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private String StreamUrl1;
+    private String StreamUrl2;
+    private Intent callIntent;
+    private String phoneNo;
+    private String sms;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
         mAuth = FirebaseAuth.getInstance();
-        stream_url = getIntent().getExtras().getString("Stream");
+        //stream_url = getIntent().getExtras().getString("Stream");
         channel = getIntent().getExtras().getString("Player");
         if (!channel.equals(PlayerConnection.getChannel())) {
             PlayerConnection.getMediaPlayer().stop();
@@ -107,6 +120,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }*/
+        PlayerConnection.setChannel1(mFirebaseRemoteConfig.getString("Channel1"));
+        PlayerConnection.setChannel2(mFirebaseRemoteConfig.getString("Channel2"));
+        PlayerConnection.setContactNumber(mFirebaseRemoteConfig.getString("ContactNumber"));
+        PlayerConnection.setCallNumber(mFirebaseRemoteConfig.getString("CallNumber"));
+        PlayerConnection.setSmsNumber(mFirebaseRemoteConfig.getString("SmsNumber"));
         mFirebaseRemoteConfig.fetch(0)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
@@ -115,12 +133,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                             //Toast.makeText(PlayerActivity.this, "Fetch Successfull", Toast.LENGTH_SHORT).show();
                             mFirebaseRemoteConfig.activateFetched();
                         } else {
-                            //Toast.makeText(PlayerActivity.this, "Fetch Failed", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PlayerActivity.this, "Fetch Failed! Please Try Again.", Toast.LENGTH_SHORT).show();
                         }
-                        
-                        CallNumber = mFirebaseRemoteConfig.getString("CallNumber");
-                        SmsNumber = mFirebaseRemoteConfig.getString("SmsNumber");
-
+                        PlayerConnection.setChannel1(mFirebaseRemoteConfig.getString("Channel1"));
+                        PlayerConnection.setChannel2(mFirebaseRemoteConfig.getString("Channel2"));
+                        PlayerConnection.setContactNumber(mFirebaseRemoteConfig.getString("ContactNumber"));
+                        PlayerConnection.setCallNumber(mFirebaseRemoteConfig.getString("CallNumber"));
+                        PlayerConnection.setSmsNumber(mFirebaseRemoteConfig.getString("SmsNumber"));
                     }
                 });
 
@@ -231,7 +250,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 try {
                     progressDialog = ProgressDialog.show(PlayerActivity.this, "Connecting for playing......", "Please wait...", true, true);
                     PlayerConnection.getMediaPlayer().reset();
-                    PlayerConnection.getMediaPlayer().setDataSource(stream_url);
+                    if(channel.equals("Channel 1")) {
+                        PlayerConnection.getMediaPlayer().setDataSource(PlayerConnection.getChannel1());
+                    }
+                    else if(channel.equals("Channel 2")) {
+                        PlayerConnection.getMediaPlayer().setDataSource(PlayerConnection.getChannel2());
+                    }
+
                     PlayerConnection.getMediaPlayer().prepareAsync();
                     PlayerConnection.getMediaPlayer().setOnErrorListener(new MediaPlayer.OnErrorListener() {
                         @Override
@@ -297,7 +322,29 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         if (view == record) {
             if (!PlayerConnection.isRecording()) {
                 progressDialog = ProgressDialog.show(this, "Connecting for Recording......", "Please wait...", true, true);
-                new Recording().execute();
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                        {
+                            // We will need to request the permission
+                            ActivityCompat.requestPermissions(PlayerActivity.this,
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+
+                            // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an app-defined int constant
+                        } else {
+                            // The permission is granted, we can perform the action
+                            new Recording().execute();
+                        }
+                    }
+                    else
+                    {
+                        new Recording().execute();
+                    }
+                } catch (Exception e) {
+                    Toast.makeText(PlayerActivity.this, "Storage Permission Denied!", Toast.LENGTH_LONG).show();
+                }
+
                 //play.setImageResource(R.drawable.play);
                 //trecording.setVisibility(View.VISIBLE);
                 //trecording.startAnimation((Animation) AnimationUtils.loadAnimation(PlayerActivity.this, R.anim.translate));
@@ -331,13 +378,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse(CallNumber));
-                        try {
-                            startActivity(callIntent);
-                        } catch (Exception e) {
-                            Toast.makeText(PlayerActivity.this, "Call Permission Denied!", Toast.LENGTH_LONG).show();
-                        }
+                        makeCallfunc();
                         dialog.cancel();
                     }
                 });
@@ -351,35 +392,41 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                 AlertDialog alertDialog = builder.create();
                 alertDialog.show();
             } else {
-                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                callIntent.setData(Uri.parse(CallNumber));
-                try {
-                    startActivity(callIntent);
-                } catch (Exception e) {
-                    Toast.makeText(PlayerActivity.this, "Call Permission Denied!", Toast.LENGTH_SHORT).show();
-                }
+                makeCallfunc();
             }
         }
         if (view == sendsms) {
-            String phoneNo = SmsNumber;
-            String sms = textSMS.getText().toString();
+            phoneNo = PlayerConnection.getSmsNumber();
+            sms = textSMS.getText().toString();
             if (sms.equals("")) {
                 Toast.makeText(getApplicationContext(), "SMS is empty! Please write your message.",
                         Toast.LENGTH_LONG).show();
             } else {
 
                 try {
-                    SmsManager smsManager = SmsManager.getDefault();
-                    smsManager.sendTextMessage(phoneNo, null, sms, null, null);
-                    Toast.makeText(getApplicationContext(), "SMS Sent!",
-                            Toast.LENGTH_LONG).show();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED)
+                        {
+                            // We will need to request the permission
+                            System.out.println("Inside version Requesting.....");
 
-                    textSMS.setText("");
+                            System.out.println("Requesting.....");
+                            ActivityCompat.requestPermissions(PlayerActivity.this,
+                                    new String[]{Manifest.permission.SEND_SMS},
+                                    MY_PERMISSIONS_REQUEST_SEND_SMS);
+
+                            // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an app-defined int constant
+                        } else {
+                            // The permission is granted, we can perform the action
+                            sendSmsfunc();
+                        }
+                    }
+                    else
+                    {
+                        sendSmsfunc();
+                    }
                 } catch (Exception e) {
-                    Toast.makeText(getApplicationContext(),
-                            "SMS faild, please try again later!",
-                            Toast.LENGTH_LONG).show();
-                    e.printStackTrace();
+                    Toast.makeText(PlayerActivity.this, "Sms Permission Denied!", Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -411,7 +458,93 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
 
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_CALL_PHONE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // Permission was granted!
+                    // Perform the action
+                    startActivity(callIntent);
+                } else {
+                    // Permission was denied
+                    // :(
+                    // Gracefully handle the denial
+                    Toast.makeText(PlayerActivity.this, "Requesting Call Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_SEND_SMS: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    sendSmsfunc();
+                } else {
 
+                    Toast.makeText(PlayerActivity.this, "Requesting Sms Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE:{
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    new Recording().execute();
+                } else {
+
+                    Toast.makeText(PlayerActivity.this, "Requesting Storage Permission Denied!", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+
+            // Add additional cases for other permissions you may have asked for
+        }
+    }
+
+
+    void sendSmsfunc()
+    {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage(phoneNo, null, sms, null, null);
+            Toast.makeText(getApplicationContext(), "SMS Sent!",
+                    Toast.LENGTH_LONG).show();
+
+            textSMS.setText("");
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(),
+                    "SMS send failed, Please try again later!",
+                    Toast.LENGTH_LONG).show();
+            e.printStackTrace();
+        }
+    }
+    void makeCallfunc()
+    {
+        callIntent = new Intent(Intent.ACTION_CALL);
+        callIntent.setData(Uri.parse(PlayerConnection.getCallNumber()));
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (checkSelfPermission(Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED)
+                {
+                    // We will need to request the permission
+                    System.out.println("Inside version Requesting.....");
+
+                    System.out.println("Requesting.....");
+                    ActivityCompat.requestPermissions(PlayerActivity.this,
+                            new String[]{Manifest.permission.CALL_PHONE},
+                            MY_PERMISSIONS_REQUEST_CALL_PHONE);
+
+                    // MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE is an app-defined int constant
+                } else {
+                    // The permission is granted, we can perform the action
+                    startActivity(callIntent);
+                }
+            }
+            else
+            {
+                startActivity(callIntent);
+            }
+        } catch (Exception e) {
+            Toast.makeText(PlayerActivity.this, "Call Permission Denied!", Toast.LENGTH_LONG).show();
+        }
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -487,9 +620,18 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
 
             try {
                 OkHttpClient client = new OkHttpClient();
-                Request request = new Request.Builder()
-                        .url(stream_url)
-                        .build();
+                Request request=null;
+                if(channel.equals("Channel 1")) {
+                    request = new Request.Builder()
+                            .url(PlayerConnection.getChannel1())
+                            .build();
+                }
+                else {
+                    request = new Request.Builder()
+                            .url(PlayerConnection.getChannel2())
+                            .build();
+                }
+
 
                 Response response = client.newCall(request).execute();
                 PlayerConnection.setInputStream(response.body().byteStream());
@@ -692,13 +834,13 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
         } else if (index == 1) {
             Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            intent.putExtra("Stream", "http://87.117.217.103:38164");
+            //intent.putExtra("Stream", "http://87.117.217.103:38164");
             intent.putExtra("Player", "Channel 1");
             finish();
             startActivity(intent);
         } else if (index == 2) {
             Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            intent.putExtra("Stream", "http://87.117.217.103:38164");
+            //intent.putExtra("Stream", "http://87.117.217.103:38164");
             intent.putExtra("Player", "Channel 2");
             finish();
             startActivity(intent);
