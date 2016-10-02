@@ -45,7 +45,8 @@ public class FragmentDrawerWebLoad extends Fragment {
     public List<Information> getData() {
 
         List<Information> data = new ArrayList<>();
-        int[] icons = {R.drawable.icon,R.drawable.channel1,R.drawable.channel2,R.drawable.hits,R.drawable.archive,R.drawable.icon,R.drawable.icon,R.drawable.update};
+        //int[] icons = {R.drawable.icon,R.drawable.channel1,R.drawable.channel2,R.drawable.hits,R.drawable.archive,R.drawable.icon,R.drawable.icon,R.drawable.update};
+        int[] icons = {R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher,R.mipmap.ic_launcher};
         String[] titles = getResources().getStringArray(R.array.drawer_tabs);
         for (int i = 0; i < titles.length; i++) {
             Information information = new Information();

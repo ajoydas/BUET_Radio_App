@@ -6,7 +6,7 @@
     android:weightSum="1">
 
     <ImageView
-        android:layout_width="100dp"
+        android:layout_width="85dp"
         android:layout_height="match_parent"
         android:src="@drawable/icon" />
 
@@ -21,14 +21,13 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/msglbl"
             android:text="BUET Radio Online Stream"
-            android:textSize="15dp"
             android:textStyle="bold"
             android:textColor="@color/colorPrimary" />
 
         <LinearLayout
             android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
             android:weightSum="1">
 
             <TextView
@@ -36,15 +35,14 @@
                 android:layout_height="wrap_content"
                 android:text="Playing...."
                 android:id="@+id/tChannel"
-                android:textSize="12dp"
+                android:textSize="10sp"
                 android:textColor="@color/colorAccent" />
 
             <Button
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Stop"
-                android:id="@+id/btn1"
-                android:layout_weight="0.32" />
+                android:id="@+id/btn1" />
 
         </LinearLayout>
 
