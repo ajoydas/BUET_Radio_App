@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
@@ -43,24 +44,33 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         notificationManager.notify(0,notificationBuilder.build());
 */
 
-        Context ctx;
+       /* Context ctx;
         ctx= BUETRadio.getAppContext();
         RemoteViews contentView=new RemoteViews(ctx.getPackageName(), R.layout.notification_bar);
         contentView.setTextViewText(R.id.message,remoteMessage.getNotification().getBody());
-
+*/
         long when = System.currentTimeMillis();
-        android.support.v4.app.NotificationCompat.Builder notificationBuilder = new android.support.v7.app.NotificationCompat.Builder(BUETRadio.getAppContext())
-                .setSmallIcon(R.drawable.icon)
-                .setContentIntent(pendingIntent)
-                .setContentTitle("Buet Radio Notification")
-                .setWhen(when)
-                .setCustomBigContentView(contentView)
-                .setOngoing(false);
-
+        android.support.v4.app.NotificationCompat.Builder notificationBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            notificationBuilder = new android.support.v7.app.NotificationCompat.Builder(BUETRadio.getAppContext())
+                    .setSmallIcon(R.drawable.black)
+                    .setContentIntent(pendingIntent)
+                    .setContentTitle("Buet Radio Notification")
+                    .setWhen(when)
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setOngoing(false);
+        }
+        else {
+            notificationBuilder = new android.support.v7.app.NotificationCompat.Builder(BUETRadio.getAppContext())
+                    .setSmallIcon(R.mipmap.icon)
+                    .setContentIntent(pendingIntent)
+                    .setContentTitle("Buet Radio Notification")
+                    .setWhen(when)
+                    .setContentText(remoteMessage.getNotification().getBody())
+                    .setOngoing(false);
+        }
         NotificationManager mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, notificationBuilder.build());
-
-
 
     }
 }
