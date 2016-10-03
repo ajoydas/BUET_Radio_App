@@ -10,6 +10,11 @@
     <item android:title="Refresh Config."
         android:id="@+id/remoteconfig_menu" />
     <item
+    android:id="@+id/contact_menu"
+    android:title="Contact Us"/>
+    <item
         android:id="@+id/exit_menu"
         android:title="Exit"/>
+
+
 </menu>

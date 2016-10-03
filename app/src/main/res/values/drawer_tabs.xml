@@ -4,10 +4,11 @@
         <item>Profile</item>
         <item>Channel 1</item>
         <item>Channel 2</item>
+        <item>ChatRoom</item>
+        <item>eSMS</item>
         <item>Radio Hits</item>
         <item>Archive</item>
-        <item>ChatRoom</item>
-        <item>Request</item>
+        <item>Info</item>
         <item>Check for Update</item>
     </string-array>
 </resources>

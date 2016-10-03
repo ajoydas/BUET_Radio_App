@@ -22,7 +22,8 @@
             android:layout_toRightOf="@+id/msglbl"
             android:text="BUET Radio Online Stream"
             android:textStyle="bold"
-            android:textColor="@color/colorPrimary" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp" />
 
         <LinearLayout
             android:orientation="horizontal"
@@ -35,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:text="Playing...."
                 android:id="@+id/tChannel"
-                android:textSize="10sp"
+                android:textSize="14sp"
                 android:textColor="@color/colorAccent" />
 
             <Button

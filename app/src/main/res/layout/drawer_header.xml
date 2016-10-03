@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:background="@color/colorPrimaryText"
+    android:background="#d8d8d7"
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
@@ -11,7 +11,7 @@
         android:layout_centerVertical="true"
         android:layout_width="72dp"
         android:layout_height="72dp"
-        android:src="@drawable/icon"
+        android:src="@mipmap/icon"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="32dp"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="Welcome"
             android:gravity="right"
-            android:textColor="@android:color/white"
+            android:textColor="#033351"
             style="@style/TextAppearance.AppCompat.Large" />
 
         <TextView
@@ -48,12 +48,12 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@android:color/white" />
+            android:background="#033351" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="\@ BUET RADIO"
+            android:text="\ BUET RADIO"
             android:textColor="@color/colorPrimary"
             android:gravity="end"
             style="@style/TextAppearance.AppCompat.Small" />

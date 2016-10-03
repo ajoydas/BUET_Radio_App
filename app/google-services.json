@@ -52,6 +52,50 @@
           "status": 2
         }
       }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:413306105383:android:4e51e19d0fd0ab57",
+        "android_client_info": {
+          "package_name": "appinventor.ai_ppd1994.buetradioblue"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "413306105383-2qc73uksq4m9o94h8uqj9fp5llf9g6gs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "appinventor.ai_ppd1994.buetradioblue",
+            "certificate_hash": "CFC3062C2E9246BD0F3B4E2482170A8EC04D1B8F"
+          }
+        },
+        {
+          "client_id": "413306105383-74jgq8tlaugc3t53uphok0nrfiviat8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9vk6D84cociIMmRuV4QciCqRWKidBTlA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "413306105383-74jgq8tlaugc3t53uphok0nrfiviat8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
     }
   ],
   "configuration_version": "1"
