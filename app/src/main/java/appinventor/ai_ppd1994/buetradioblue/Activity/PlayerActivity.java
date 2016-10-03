@@ -273,21 +273,49 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                             PlayerConnection.getMediaPlayer().start();
 
                             //showNotification();
-                            Context ctx;
-                            ctx = PlayerActivity.this;
-                            RemoteViews contentView = new RemoteViews(ctx.getPackageName(), R.layout.messageview);
+                            RemoteViews contentView = new RemoteViews(PlayerActivity.this.getPackageName(), R.layout.messageview);
                             contentView.setTextViewText(R.id.tChannel, "Playing " + PlayerConnection.getChannel());
                             Intent notificationIntent = new Intent(PlayerActivity.this, HelperActivity.class);
                             PendingIntent contentIntent = PendingIntent.getActivity(PlayerActivity.this, 4, notificationIntent, 0);
                             contentView.setOnClickPendingIntent(R.id.btn1, contentIntent);
+                            Intent intent;
+                            if(PlayerConnection.getChannel().equals("Channel 1"))
+                            {
+                                intent=new Intent(getApplicationContext(),PlayerActivity.class);
+                                //intent.putExtra("Stream","http://87.117.217.103:38164");
+                                intent.putExtra("Player","Channel 1");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                            }
+                            else
+                            {
+                                intent=new Intent(getApplicationContext(),PlayerActivity.class);
+                                //intent.putExtra("Stream","http://87.117.217.103:38164");
+                                intent.putExtra("Player","Channel 2");
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
+                            }
+                            PendingIntent outsideintent = PendingIntent.getActivity(PlayerActivity.this,0,intent,PendingIntent.FLAG_CANCEL_CURRENT);
 
+                            android.support.v4.app.NotificationCompat.Builder notificationBuilder;
                             long when = System.currentTimeMillis();
-                            android.support.v4.app.NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(PlayerActivity.this)
-                                    .setSmallIcon(R.drawable.black)
-                                    .setContentTitle("Buet Radio Online Stream")
-                                    .setWhen(when)
-                                    .setCustomBigContentView(contentView)
-                                    .setOngoing(true);
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                notificationBuilder= new NotificationCompat.Builder(PlayerActivity.this)
+                                        .setSmallIcon(R.drawable.black)
+                                        .setContentTitle("Buet Radio Online Stream")
+                                        .setWhen(when)
+                                        .setCustomBigContentView(contentView)
+                                        .setOngoing(true)
+                                        .setContentIntent(outsideintent);
+                            }
+                            else
+                            {
+                                 notificationBuilder = new NotificationCompat.Builder(PlayerActivity.this)
+                                        .setSmallIcon(R.mipmap.icon)
+                                        .setContentTitle("Buet Radio Online Stream")
+                                        .setWhen(when)
+                                        .setCustomBigContentView(contentView)
+                                        .setOngoing(true)
+                                         .setContentIntent(outsideintent);
+                            }
 
                             NotificationManager mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
                             mNotificationManager.notify(1, notificationBuilder.build());

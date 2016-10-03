@@ -33,7 +33,7 @@ public class HelperActivity extends Activity {
                 if(PlayerConnection.getChannel().equals("Channel 1"))
                 {
                     Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    //intent.putExtra("Stream","http://87.117.217.103:38164");
                     intent.putExtra("Player","Channel 1");
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                     startActivity(intent);
@@ -41,7 +41,7 @@ public class HelperActivity extends Activity {
                 else
                 {
                     Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-                    intent.putExtra("Stream","http://87.117.217.103:38164");
+                    //intent.putExtra("Stream","http://87.117.217.103:38164");
                     intent.putExtra("Player","Channel 2");
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                     startActivity(intent);
