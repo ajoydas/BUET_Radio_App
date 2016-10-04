@@ -94,7 +94,7 @@
         </activity>
         <activity
             android:name="appinventor.ai_ppd1994.buetradioblue.activities.RequestActivity"
-            android:label="BUET RADIO Request"
+            android:label="BUET RADIO eSMS"
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity android:name="appinventor.ai_ppd1994.buetradioblue.activities.HelperActivity" />

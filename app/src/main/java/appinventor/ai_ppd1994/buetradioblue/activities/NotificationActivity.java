@@ -64,7 +64,7 @@ public class NotificationActivity extends AppCompatActivity {
             //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
             try {
                 if (mAuth.getCurrentUser() != null) {
-                    if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                    if (mAuth.getCurrentUser().getEmail().equals("buetradio@gmail.com")) {
                         option.setVisibility(View.VISIBLE);
                         option.setText("Edit");
                         option.setOnClickListener(new View.OnClickListener() {
@@ -115,7 +115,7 @@ public class NotificationActivity extends AppCompatActivity {
             ref = database.getReference("requests");
 
             try {
-                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                if (mAuth.getCurrentUser().getEmail().equals("buetradio@gmail.com")) {
                     option.setVisibility(View.VISIBLE);
                     option.setText("Clear All");
                     option.setOnClickListener(new View.OnClickListener() {

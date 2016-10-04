@@ -3,23 +3,23 @@
 <defaultsMap>
     <entry>
         <key>Channel1</key>
-        <value>http://87.117.217.103:38164</value>
+        <value>http://87.117.201.152:39821</value>
     </entry>
     <entry>
         <key>Channel2</key>
-        <value>http://87.117.217.103:38164</value>
+        <value>http://78.129.224.11:16426</value>
     </entry>
     <entry>
         <key>CallNumber</key>
-        <value>tel:01834855306</value>
+        <value>tel:01516757620</value>
     </entry>
     <entry>
         <key>SmsNumber</key>
-        <value>01521487525</value>
+        <value>01516757620</value>
     </entry>
     <entry>
         <key>ContactNumber</key>
-        <value>tel:01834855306</value>
+        <value>tel:01516757620</value>
     </entry>
 </defaultsMap>
     <!-- END xml_defaults -->

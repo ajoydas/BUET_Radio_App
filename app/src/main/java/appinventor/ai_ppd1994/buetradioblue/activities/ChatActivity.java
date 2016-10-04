@@ -225,7 +225,7 @@ public class ChatActivity extends AppCompatActivity  implements
 
             if (mAuth.getCurrentUser().getEmail() != null) {
 
-                if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+                if (mAuth.getCurrentUser().getEmail().equals("buetradio@gmail.com")) {
                     delete.setVisibility(View.VISIBLE);
                     delete.setOnClickListener(new View.OnClickListener() {
                         @Override

@@ -45,7 +45,7 @@ public class RequestActivity extends AppCompatActivity {
         view=(Button) findViewById(R.id.bView);
         if(mAuth.getCurrentUser().getEmail()!=null) {
 
-            if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
+            if (mAuth.getCurrentUser().getEmail().equals("buetradio@gmail.com")) {
                 view.setVisibility(View.VISIBLE);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override

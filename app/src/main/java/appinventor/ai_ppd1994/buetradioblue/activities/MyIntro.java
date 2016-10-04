@@ -23,13 +23,12 @@ public class MyIntro extends AppIntro {
 
         progressDialog = ProgressDialog.show(MyIntro.this, "Welcome to BUET RADIO....", "Please wait..", true, true);
 
-        addSlide(AppIntroFragment.newInstance("Player", "With recording, calling & sending sms feature", R.drawable.player, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Sign In", "With Google or Facebook & Connect to the community", R.drawable.signin, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Chatroom", "Chat with BUET Radio Community and share your feelings", R.drawable.chatroom, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Rewind", "Rewind the archive from SoundCloud & Buetradio.com", R.drawable.rewind, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Events", "Get the events details from the app", R.drawable.events, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Request", "Send your song and other request to the host", R.drawable.request, R.color.colorAccent));
-        addSlide(AppIntroFragment.newInstance("Notification", "Now you will be notified about the updates", R.drawable.notify, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("Player", "With recording, calling & sending sms feature", R.drawable.introplayer, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("Sign In", "With Google or Facebook & Connect to the community", R.drawable.introsignin, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("Chatroom", "Chat with BUET Radio Community and share your feelings", R.drawable.introchatroom, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("Rewind", "Rewind the archive from SoundCloud & Buetradio.com", R.drawable.introhits, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("Events", "Get the events details from the app", R.drawable.introevents, R.color.colorAccent));
+        addSlide(AppIntroFragment.newInstance("eSMS", "Send SMS even if you are out of balance", R.drawable.introesms, R.color.colorAccent));
 
         try{
             progressDialog.dismiss();
