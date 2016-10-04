@@ -72,7 +72,7 @@
 
     <fragment
         android:id="@+id/fragment_navigation_drawer"
-        android:name="appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawer"
+        android:name="appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawer"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"

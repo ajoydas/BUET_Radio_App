@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Services;
+package appinventor.ai_ppd1994.buetradioblue.services;
 
 import android.app.AlarmManager;
 import android.app.NotificationManager;

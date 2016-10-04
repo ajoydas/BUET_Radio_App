@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package appinventor.ai_ppd1994.buetradioblue.Objects;
+package appinventor.ai_ppd1994.buetradioblue.objects;
 
 public class FriendlyMessage {
 

@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Fragment;
+package appinventor.ai_ppd1994.buetradioblue.fragments;
 
 /**
  * Created by ajoy on 9/15/16.

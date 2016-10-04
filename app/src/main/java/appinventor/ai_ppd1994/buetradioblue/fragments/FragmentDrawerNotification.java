@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Fragment;
+package appinventor.ai_ppd1994.buetradioblue.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,10 +18,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import appinventor.ai_ppd1994.buetradioblue.Activity.NotificationActivity;
-import appinventor.ai_ppd1994.buetradioblue.Adapter.AdapterDrawer;
-import appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio;
-import appinventor.ai_ppd1994.buetradioblue.Objects.Information;
+import appinventor.ai_ppd1994.buetradioblue.activities.NotificationActivity;
+import appinventor.ai_ppd1994.buetradioblue.adapters.AdapterDrawer;
+import appinventor.ai_ppd1994.buetradioblue.application.BUETRadio;
+import appinventor.ai_ppd1994.buetradioblue.objects.Information;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 /**

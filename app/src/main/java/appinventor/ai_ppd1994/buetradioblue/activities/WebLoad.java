@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -16,8 +16,8 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio;
-import appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawerWebLoad;
+import appinventor.ai_ppd1994.buetradioblue.application.BUETRadio;
+import appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawerWebLoad;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 import static appinventor.ai_ppd1994.buetradioblue.R.id.webView;
@@ -45,9 +45,6 @@ public class WebLoad extends AppCompatActivity {
 
     }
     private void setupDrawer() {
-//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
-//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
-        //set the Toolbar as ActionBar
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //setup the NavigationDrawer
@@ -113,23 +110,6 @@ public class WebLoad extends AppCompatActivity {
         startActivity(new Intent(BUETRadio.getAppContext(),WebLoad.class));
         //load();
     }
-    /*@Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-
-        // Save the state of the WebView
-        browser.saveState(outState);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState)
-    {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        // Restore the state of the WebView
-        browser.restoreState(savedInstanceState);
-    }*/
 
     @Override
     protected void onPause() {
@@ -201,7 +181,6 @@ public class WebLoad extends AppCompatActivity {
         }else if(index==1)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 1");
             finish();
             startActivity(intent);
@@ -209,7 +188,6 @@ public class WebLoad extends AppCompatActivity {
         else if(index==2)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 2");
             finish();
             startActivity(intent);

@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Adapter;
+package appinventor.ai_ppd1994.buetradioblue.adapters;
 
 import java.util.ArrayList;
 

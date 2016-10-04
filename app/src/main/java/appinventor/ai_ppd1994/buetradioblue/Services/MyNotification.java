@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Services;
+package appinventor.ai_ppd1994.buetradioblue.services;
 
 import android.annotation.SuppressLint;
 import android.app.Notification;
@@ -8,7 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import appinventor.ai_ppd1994.buetradioblue.Activity.HelperActivity;
+import appinventor.ai_ppd1994.buetradioblue.activities.HelperActivity;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 /**

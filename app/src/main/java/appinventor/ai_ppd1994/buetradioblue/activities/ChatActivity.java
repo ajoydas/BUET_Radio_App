@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -47,7 +47,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import appinventor.ai_ppd1994.buetradioblue.Objects.FriendlyMessage;
+import appinventor.ai_ppd1994.buetradioblue.objects.FriendlyMessage;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 public class ChatActivity extends AppCompatActivity  implements
@@ -89,9 +89,7 @@ public class ChatActivity extends AppCompatActivity  implements
     private DatabaseReference mFirebaseDatabaseReference;
     private FirebaseAuth mFirebaseAuth;
     private FirebaseUser mFirebaseUser;
-    private FirebaseAnalytics mFirebaseAnalytics;
     private EditText mMessageEditText;
-    private FirebaseRemoteConfig mFirebaseRemoteConfig;
     private GoogleApiClient mGoogleApiClient;
     private FirebaseDatabase database;
     private DatabaseReference ref;
@@ -288,95 +286,6 @@ public class ChatActivity extends AppCompatActivity  implements
         InputMethodManager inputMethodManager =(InputMethodManager)getSystemService(Activity.INPUT_METHOD_SERVICE);
         inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
-
-
-
-    Bitmap bm= null;
-
-    private Bitmap getImageBitmap(String url) {
-        Bitmap bm = null;
-        try {
-            progressDialog=ProgressDialog.show(ChatActivity.this, "Refreshing......","Please wait...",true,true);
-            URL aURL = new URL(url);
-            URLConnection conn = aURL.openConnection();
-            conn.connect();
-            InputStream is = conn.getInputStream();
-            BufferedInputStream bis = new BufferedInputStream(is);
-            bm = BitmapFactory.decodeStream(bis);
-            bis.close();
-            is.close();
-        } catch (IOException e) {
-            Toast.makeText(getApplicationContext(),"Network Error",Toast.LENGTH_SHORT).show();
-        }
-        progressDialog.dismiss();
-        return bm;
-    }
-
-   /* private Bitmap getImageBitmap(String url) {
-        //Bitmap bm = null;
-        new LoadImage(url).execute();
-        return bm;
-    }
-    private class LoadImage extends AsyncTask
-
-    {
-        String url=null;
-
-        public LoadImage(String url) {
-            this.url = url;
-        }
-
-        @Override
-        protected Object doInBackground(Object[] objects) {
-            try {
-                URL aURL = new URL(url);
-                URLConnection conn = aURL.openConnection();
-                conn.connect();
-                InputStream is = conn.getInputStream();
-                BufferedInputStream bis = new BufferedInputStream(is);
-                bm = BitmapFactory.decodeStream(bis);
-                bis.close();
-                is.close();
-            } catch (IOException e) {
-                System.out.println("Net Error!");
-            }
-            return null;
-        }
-    }*/
-/*
-    private static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
-        TextView messageText;
-        TextView nameText;
-        //ImageView photo;
-
-        public ChatMessageViewHolder(View itemView) {
-            super(itemView);
-            nameText = (TextView)itemView.findViewById(R.id.user);
-            messageText = (TextView) itemView.findViewById(R.id.message);
-           // photo= (ImageView) itemView.findViewById(R.id.iPhoto);
-        }
-    }
-
-    //String to Bitmap
-    public Bitmap StringToBitMap(String encodedString){
-        try {
-            byte [] encodeByte= Base64.decode(encodedString,Base64.DEFAULT);
-            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
-            return bitmap;
-        } catch(Exception e) {
-            e.getMessage();
-            return null;
-        }
-    }
-
-    //Bitmap to string converter
-    public String getStringImage(Bitmap bmp){
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
-    }*/
 
     @Override
     public void onBackPressed() {

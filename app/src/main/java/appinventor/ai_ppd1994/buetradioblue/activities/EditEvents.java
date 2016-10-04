@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;

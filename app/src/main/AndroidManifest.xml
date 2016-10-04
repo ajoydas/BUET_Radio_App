@@ -11,35 +11,48 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
-        android:name="appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio"
+        android:name="appinventor.ai_ppd1994.buetradioblue.application.BUETRadio"
         android:allowBackup="true"
         android:icon="@mipmap/icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:largeHeap="true"
+        android:launchMode="singleTask"
         >
-        <activity android:name="appinventor.ai_ppd1994.buetradioblue.Activity.StartActivity">
+        <activity android:name="appinventor.ai_ppd1994.buetradioblue.activities.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- handle website links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="http" android:host="buetradio.com" />
+            </intent-filter>
+
+            <!-- handle app links -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="buetradio" />
             </intent-filter>
         </activity>
 
-        <service android:name="appinventor.ai_ppd1994.buetradioblue.Services.MyFirebaseInstanceIdService">
+        <service android:name="appinventor.ai_ppd1994.buetradioblue.services.MyFirebaseInstanceIdService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="appinventor.ai_ppd1994.buetradioblue.Services.MyFirebaseMessagingService">
+        <service android:name="appinventor.ai_ppd1994.buetradioblue.services.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-
-
         <!--
         <service
             android:enabled="true"
@@ -53,13 +66,13 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         -->
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.NotificationActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.NotificationActivity"
             android:label="BUET RADIO" />
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.SignInActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.SignInActivity"
             android:label="BUET RADIO Sign in" />
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.ProfileActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.ProfileActivity"
             android:label="BUET RADIO User Profile" />
 
         <meta-data
@@ -67,24 +80,27 @@
             android:value="@string/facebook_app_id" />
 
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.ChatActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.ChatActivity"
             android:label="BUET RADIO ChatRoom"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.PlayerActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.PlayerActivity"
             android:label="BUET Radio Player"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.WebLoad"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.WebLoad"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:label="BUET Radio Rewind"></activity>
+            android:label="BUET Radio Rewind">
+        </activity>
         <activity
-            android:name="appinventor.ai_ppd1994.buetradioblue.Activity.RequestActivity"
+            android:name="appinventor.ai_ppd1994.buetradioblue.activities.RequestActivity"
             android:label="BUET RADIO Request"
-            android:windowSoftInputMode="stateHidden"></activity>
-        <activity android:name="appinventor.ai_ppd1994.buetradioblue.Activity.HelperActivity" />
-        <activity android:name="appinventor.ai_ppd1994.buetradioblue.Activity.EditEvents"></activity>
-        <activity android:name="appinventor.ai_ppd1994.buetradioblue.Activity.MyIntro"
+            android:windowSoftInputMode="stateHidden">
+        </activity>
+        <activity android:name="appinventor.ai_ppd1994.buetradioblue.activities.HelperActivity" />
+        <activity android:name="appinventor.ai_ppd1994.buetradioblue.activities.EditEvents">
+        </activity>
+        <activity android:name="appinventor.ai_ppd1994.buetradioblue.activities.MyIntro"
             android:label="My Introduction" />
     </application>
 

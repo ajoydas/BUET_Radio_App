@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Objects;
+package appinventor.ai_ppd1994.buetradioblue.objects;
 
 import android.content.Context;
 import android.graphics.Bitmap;

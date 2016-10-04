@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="appinventor.ai_ppd1994.buetradioblue.Activity.EditEvents">
+    tools:context="appinventor.ai_ppd1994.buetradioblue.activities.EditEvents">
 
     <LinearLayout
         android:id="@+id/container_app_bar"

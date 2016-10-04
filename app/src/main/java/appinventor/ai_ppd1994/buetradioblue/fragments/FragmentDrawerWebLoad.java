@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Fragment;
+package appinventor.ai_ppd1994.buetradioblue.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -18,16 +18,16 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import appinventor.ai_ppd1994.buetradioblue.Activity.StartActivity;
-import appinventor.ai_ppd1994.buetradioblue.Adapter.AdapterDrawer;
-import appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio;
-import appinventor.ai_ppd1994.buetradioblue.Objects.Information;
+import appinventor.ai_ppd1994.buetradioblue.activities.WebLoad;
+import appinventor.ai_ppd1994.buetradioblue.adapters.AdapterDrawer;
+import appinventor.ai_ppd1994.buetradioblue.application.BUETRadio;
+import appinventor.ai_ppd1994.buetradioblue.objects.Information;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 /**
- * Created by ajoy on 9/7/16.
+ * Created by ajoy on 9/11/16.
  */
-public class FragmentDrawer extends Fragment{
+public class FragmentDrawerWebLoad extends Fragment {
     public static final String KEY_USER_LEARNED_DRAWER = "user_learned_drawer";
     private RecyclerView mRecyclerDrawer;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -38,13 +38,13 @@ public class FragmentDrawer extends Fragment{
     private View mContainer;
     private boolean mDrawerOpened = false;
 
-    public FragmentDrawer() {
+    public FragmentDrawerWebLoad() {
     }
 
     public List<Information> getData() {
 
         List<Information> data = new ArrayList<>();
-//        int[] icons = {R.drawable.icon,R.drawable.channel1,R.drawable.channel2,R.drawable.hits,R.drawable.archive,R.drawable.icon,R.drawable.icon,R.drawable.update};
+        //int[] icons = {R.drawable.icon,R.drawable.channel1,R.drawable.channel2,R.drawable.hits,R.drawable.archive,R.drawable.icon,R.drawable.icon,R.drawable.update};
         int[] icons = {R.mipmap.profile,R.mipmap.channel,R.mipmap.channel,R.mipmap.chatroom,R.mipmap.esms,R.mipmap.hits,R.mipmap.archive,R.mipmap.info,R.mipmap.update};
         String[] titles = getResources().getStringArray(R.array.drawer_tabs);
         for (int i = 0; i < titles.length; i++) {
@@ -80,7 +80,7 @@ public class FragmentDrawer extends Fragment{
             @Override
             public void onClick(View view, int position) {
                 mDrawerLayout.closeDrawer(GravityCompat.START);
-                ((StartActivity) getActivity()).onDrawerItemClicked(position - 1);
+                ((WebLoad) getActivity()).onDrawerItemClicked(position - 1);
             }
 
             @Override
@@ -114,7 +114,7 @@ public class FragmentDrawer extends Fragment{
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
-                ((StartActivity) getActivity()).onDrawerSlide(slideOffset);
+                ((WebLoad) getActivity()).onDrawerSlide(slideOffset);
                 //toolbar.setAlpha(1 - slideOffset / 2);
             }
         };
@@ -182,3 +182,4 @@ public class FragmentDrawer extends Fragment{
         }
     }
 }
+

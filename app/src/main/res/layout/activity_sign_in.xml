@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="appinventor.ai_ppd1994.buetradioblue.Activity.SignInActivity">
+    tools:context="appinventor.ai_ppd1994.buetradioblue.activities.SignInActivity">
 
     <include
         android:id="@+id/app_bar"
@@ -28,7 +28,7 @@
 
         <fragment
             android:id="@+id/fragment_facebook"
-            android:name="appinventor.ai_ppd1994.buetradioblue.Fragment.MainFragment"
+            android:name="appinventor.ai_ppd1994.buetradioblue.fragments.MainFragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout="@layout/fragment_main"

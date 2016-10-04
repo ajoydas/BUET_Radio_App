@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.content.Intent;
 import android.graphics.Bitmap;

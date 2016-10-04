@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Application;
+package appinventor.ai_ppd1994.buetradioblue.application;
 
 import android.content.Context;
 import android.content.SharedPreferences;

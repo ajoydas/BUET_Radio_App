@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Services;
+package appinventor.ai_ppd1994.buetradioblue.services;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;

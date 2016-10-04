@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Fragment;
+package appinventor.ai_ppd1994.buetradioblue.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -27,8 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
-import appinventor.ai_ppd1994.buetradioblue.Activity.ProfileActivity;
-import appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio;
+import appinventor.ai_ppd1994.buetradioblue.activities.ProfileActivity;
+import appinventor.ai_ppd1994.buetradioblue.application.BUETRadio;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 

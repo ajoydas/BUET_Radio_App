@@ -6,4 +6,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
+    <string name="info_main"><![CDATA[BUET Radio is a community radio run by the students of Bangladesh University of Engineering & Technology. This radio will be on air on every thursday at 10 pm and is hoping to broadcast the events of BUET.]]></string>
 </resources>

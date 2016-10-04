@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -102,7 +102,6 @@ public class RequestActivity extends AppCompatActivity {
                     Toast.makeText(RequestActivity.this, "Name or request can't be empty.", Toast.LENGTH_SHORT).show();
                 }
                 else {
-                    //mRef = new Firebase("https://buetradio-865f1.firebaseio.com/requests");
 
                     ref.push().setValue("(" + nameField.getText() + "," + batchField.getText() + "," + requestField.getText() + ")", new DatabaseReference.CompletionListener()
                     {

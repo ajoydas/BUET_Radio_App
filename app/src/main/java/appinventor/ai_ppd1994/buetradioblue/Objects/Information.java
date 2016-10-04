@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Objects;
+package appinventor.ai_ppd1994.buetradioblue.objects;
 
 /**
  * Created by Windows on 22-12-2014.

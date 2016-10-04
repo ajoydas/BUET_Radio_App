@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Adapter;
+package appinventor.ai_ppd1994.buetradioblue.adapters;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import appinventor.ai_ppd1994.buetradioblue.Objects.Information;
+import appinventor.ai_ppd1994.buetradioblue.objects.Information;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 

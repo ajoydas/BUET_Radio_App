@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.Manifest;
 import android.app.NotificationManager;
@@ -39,10 +39,10 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings;
 
 import java.util.ArrayList;
 
-import appinventor.ai_ppd1994.buetradioblue.Adapter.GridviewAdapter;
+import appinventor.ai_ppd1994.buetradioblue.adapters.GridviewAdapter;
 import appinventor.ai_ppd1994.buetradioblue.BuildConfig;
-import appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawer;
-import appinventor.ai_ppd1994.buetradioblue.Objects.PlayerConnection;
+import appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawer;
+import appinventor.ai_ppd1994.buetradioblue.objects.PlayerConnection;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 public class StartActivity extends AppCompatActivity {
@@ -62,9 +62,6 @@ public class StartActivity extends AppCompatActivity {
 
     FirebaseAuth mAuth;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private String StreamUrl1;
-    private String StreamUrl2;
-    private String ContactNumber;
     private Intent callIntent;
 
     @Override
@@ -166,20 +163,6 @@ public class StartActivity extends AppCompatActivity {
         // Set custom adapter to gridview
         gridView = (GridView) findViewById(R.id.gridView);
         gridView.setAdapter(mAdapter);
-        /*
-        stopPlayer= (Button) findViewById(R.id.bStopAll);
-
-        stopPlayer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), StartActivity.class);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | IntentCompat.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            }
-        });
-        */
 
         // Implement On Item click listener
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener()
@@ -191,11 +174,6 @@ public class StartActivity extends AppCompatActivity {
                 if(position==0)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-//                    if(StreamUrl1.equals("")||StreamUrl1==null)
-//                    {
-//                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
-//                    }
-//                    intent.putExtra("Stream",StreamUrl1);
                     intent.putExtra("Player","Channel 1");
                     //finish();
                     startActivity(intent);
@@ -203,11 +181,6 @@ public class StartActivity extends AppCompatActivity {
                 else if(position==1)
                 {
                     Intent intent=new Intent(StartActivity.this,PlayerActivity.class);
-//                    if(StreamUrl1.equals("")||StreamUrl1==null)
-//                    {
-//                        StreamUrl1=mFirebaseRemoteConfig.getString("Channel1");
-//                    }
-//                    intent.putExtra("Stream",StreamUrl2);
                     intent.putExtra("Player","Channel 2");
                     //finish();
                     startActivity(intent);
@@ -248,7 +221,6 @@ public class StartActivity extends AppCompatActivity {
                 {
                     Intent intent=new Intent(StartActivity.this,WebLoad.class);
                     intent.putExtra("Url","https://soundcloud.com/buet-radio");
-                    // intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     //finish();
                     startActivity(intent);
                 }
@@ -256,7 +228,6 @@ public class StartActivity extends AppCompatActivity {
                 {
                     Intent intent=new Intent(StartActivity.this,WebLoad.class);
                     intent.putExtra("Url","http://buetradio.com/archive.html");
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
                     //finish();
                     startActivity(intent);
                 }
@@ -293,9 +264,6 @@ public class StartActivity extends AppCompatActivity {
                 .getSystemService(Context.TELEPHONY_SERVICE);
         telephonyManager.listen(phoneListener,
                 PhoneStateListener.LISTEN_CALL_STATE);
-
-        //animate the Toolbar when it comes into the picture
-        //AnimationUtils.animateToolbarDroppingDown(mContainerToolbar);
 
     }
     @Override
@@ -361,17 +329,6 @@ public class StartActivity extends AppCompatActivity {
         listMenuItem.add("Profile");
         listMenuItem.add("Events");
 
-        /*listIcon = new ArrayList<Integer>();
-        listIcon.add(R.drawable.channel1);
-        listIcon.add(R.drawable.channel2);
-        listIcon.add(R.drawable.hits);
-        listIcon.add(R.drawable.archive);
-        listIcon.add(R.drawable.icon);
-        listIcon.add(R.drawable.icon);
-        listIcon.add(R.drawable.icon);
-        listIcon.add(R.drawable.icon);
-        listIcon.add(R.drawable.info);
-        listIcon.add(R.drawable.icon);*/
         listIcon = new ArrayList<Integer>();
         listIcon.add(R.drawable.channels);
         listIcon.add(R.drawable.channels);
@@ -424,7 +381,6 @@ public class StartActivity extends AppCompatActivity {
         }else if(index==1)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 1");
             //finish();
             startActivity(intent);
@@ -432,7 +388,6 @@ public class StartActivity extends AppCompatActivity {
         else if(index==2)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            //intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 2");
             //finish();
             startActivity(intent);

@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import appinventor.ai_ppd1994.buetradioblue.Fragment.MainFragment;
+import appinventor.ai_ppd1994.buetradioblue.fragments.MainFragment;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 public class SignInActivity extends AppCompatActivity implements MainFragment.OnFragmentInteractionListener {
@@ -34,8 +34,6 @@ public class SignInActivity extends AppCompatActivity implements MainFragment.On
     private GoogleApiClient mGoogleApiClient;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    private LoginButton loginButton;
-    private CallbackManager callbackManager;
     private Toolbar mToolbar;
     String redirect;
 
@@ -47,40 +45,6 @@ public class SignInActivity extends AppCompatActivity implements MainFragment.On
         setSupportActionBar(mToolbar);
 
         redirect=getIntent().getExtras().getString("From");
-
-/*        FacebookSdk.sdkInitialize(this.getApplicationContext());
-
-        callbackManager = CallbackManager.Factory.create();
-        loginButton = (LoginButton) findViewById(R.id.login_button);
-        loginButton.setReadPermissions("email", "public_profile");
-        // If using in a fragment
-        // Callback registration
-        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                // App code
-                Toast.makeText(SignInActivity.this, "Login Successfull!",
-                        Toast.LENGTH_LONG).show();
-                handleFacebookAccessToken(loginResult.getAccessToken());
-            }
-
-            @Override
-            public void onCancel() {
-                // App code
-                System.out.println("Facebook Cancel");
-            }
-
-            @Override
-            public void onError(FacebookException exception) {
-                // App code
-                System.out.println("Facebook Error");
-            }
-
-
-        });*/
-
-
-
 
         signInButton = (SignInButton) findViewById(R.id.bGoogle);
         mAuth = FirebaseAuth.getInstance();
@@ -228,37 +192,6 @@ public class SignInActivity extends AppCompatActivity implements MainFragment.On
     public void onFragmentInteraction(Uri uri) {
 
     }
-
-
-
-
-    /*private void handleFacebookAccessToken(AccessToken token) {
-
-        System.out.println("Access "+token);
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(SignInActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            Toast.makeText(SignInActivity.this, "Authentication Successfull.",
-                                    Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(SignInActivity.this,ProfileActivity.class));
-
-                        }
-                        // ...
-                    }
-                });
-    }*/
 
     @Override
     public void onBackPressed() {

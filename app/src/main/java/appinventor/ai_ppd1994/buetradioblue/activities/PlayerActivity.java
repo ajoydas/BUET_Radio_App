@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.Manifest;
 import android.app.Activity;
@@ -52,10 +52,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import appinventor.ai_ppd1994.buetradioblue.BuildConfig;
-import appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawerPlayer;
-import appinventor.ai_ppd1994.buetradioblue.Objects.PlayerConnection;
+import appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawerPlayer;
+import appinventor.ai_ppd1994.buetradioblue.objects.PlayerConnection;
 import appinventor.ai_ppd1994.buetradioblue.R;
-import appinventor.ai_ppd1994.buetradioblue.Services.MyNotification;
+import appinventor.ai_ppd1994.buetradioblue.services.MyNotification;
 
 public class PlayerActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -63,25 +63,16 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 231;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE =321 ;
     ImageButton play, stop, record, call;
-    //Button directory;
     Button sendsms, chat, request;
-    boolean isPlaying = false;
-    boolean isRecording = false;
-    TextView tplaying, trecording, tcall;
+    TextView tplaying, trecording;
     private Toolbar mToolbar;
     EditText textSMS;
 
     String channel;
-    String stream_url;
-    private String CallNumber;
-    private String SmsNumber;
     private FirebaseAuth mAuth;
     private ProgressDialog progressDialog;
-    private ViewGroup mContainerToolbar;
     private FragmentDrawerPlayer mDrawerFragment;
     private FirebaseRemoteConfig mFirebaseRemoteConfig;
-    private String StreamUrl1;
-    private String StreamUrl2;
     private Intent callIntent;
     private String phoneNo;
     private String sms;
@@ -179,8 +170,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         stop.setOnClickListener(this);
         record.setOnClickListener(this);
         call.setOnClickListener(this);
-        //tcall.setOnClickListener(this);
-        //directory.setOnClickListener(this);
         sendsms.setOnClickListener(this);
         chat.setOnClickListener(this);
         request.setOnClickListener(this);
@@ -220,16 +209,8 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public void showNotification() {
-        new MyNotification(this);
-        //finish();
-    }
-
 
     private void setupDrawer() {
-//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
-//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
-        //set the Toolbar as ActionBar
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         //setup the NavigationDrawer
@@ -282,14 +263,12 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                             if(PlayerConnection.getChannel().equals("Channel 1"))
                             {
                                 intent=new Intent(getApplicationContext(),PlayerActivity.class);
-                                //intent.putExtra("Stream","http://87.117.217.103:38164");
                                 intent.putExtra("Player","Channel 1");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                             }
                             else
                             {
                                 intent=new Intent(getApplicationContext(),PlayerActivity.class);
-                                //intent.putExtra("Stream","http://87.117.217.103:38164");
                                 intent.putExtra("Player","Channel 2");
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP );
                             }
@@ -581,50 +560,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    /*
-        if(view==directory)
-        {
-            *//*Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + "/BuetRadioRecord/");
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(selectedUri, "resource/folder");
-
-            if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
-            {
-                startActivity(intent);
-            }
-            else
-            {
-                // if you reach this place, it means there is no any file
-                // explorer app installed on your device
-
-            }*//*
-
-            if(createDirIfNotExists("BuetRadioRecords"))
-            {
-                *//*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                Uri uri = Uri.parse(Environment.getExternalStorageDirectory().getPath()
-                        + "/BuetRadioRecord/");
-                intent.setDataAndType(uri, "text/csv");
-                startActivity(Intent.createChooser(intent, "Open folder"));*//*
-                Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/BuetRadioRecord/");
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setDataAndType(selectedUri, "text/csv");
-
-                if (intent.resolveActivityInfo(getPackageManager(), 0) != null)
-                {
-                    startActivity(Intent.createChooser(intent, "Open folder"));
-                }
-                else{
-                    Toast.makeText(this,"The folder can't be loaded.",Toast.LENGTH_SHORT).show();
-                }
-            }
-            else
-            {
-                Toast.makeText(this,"The directory can't be created.",Toast.LENGTH_SHORT).show();
-            }
-
-        }*/
-
     void update() {
         if(progressDialog.isShowing()) {
             progressDialog.dismiss();
@@ -694,24 +629,7 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     PlayerConnection.getFileOutputStream().write(c);
                 }
-                /*int bytesRead = 0;
-                int bytes;
-                while (((bytes = inputStream.read()) != -1) && isRecording) {
 
-                    fileOutputStream.write(bytes);
-                    bytesRead++;
-
-                    stopTime = System.currentTimeMillis();
-
-                    long seconds = (Math.abs(startTime-stopTime));
-                    int minutes = 1000 * 60 * 60;
-
-                    if(minutes<=seconds)
-                    {
-                        Log.d("xxx", "recording task exceed stopped");
-                        break;
-                    }
-                }*/
                 System.out.println("Closed Recording.......");
                 PlayerConnection.getInputStream().close();
                 try {
@@ -736,21 +654,6 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             PlayerConnection.setIsRecording(false);
             return null;
 
-            /*URL url = null;
-            try {
-                url = new URL(stream_url);
-                inputStream = url.openStream();
-                fileOutputStream = new FileOutputStream(outputSource);
-                int c;
-
-                while ((c = inputStream.read()) != -1) {
-                    fileOutputStream.write(c);
-                }
-                fileOutputStream.close();
-            } catch (IOException e) {
-                System.out.println("Can't Record.");
-                e.printStackTrace();
-            }*/
         }
 
         @Override
@@ -858,13 +761,11 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
             }
         } else if (index == 1) {
             Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            //intent.putExtra("Stream", "http://87.117.217.103:38164");
             intent.putExtra("Player", "Channel 1");
             finish();
             startActivity(intent);
         } else if (index == 2) {
             Intent intent = new Intent(getApplicationContext(), PlayerActivity.class);
-            //intent.putExtra("Stream", "http://87.117.217.103:38164");
             intent.putExtra("Player", "Channel 2");
             finish();
             startActivity(intent);

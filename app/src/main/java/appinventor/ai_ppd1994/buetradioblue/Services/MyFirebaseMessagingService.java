@@ -1,18 +1,16 @@
-package appinventor.ai_ppd1994.buetradioblue.Services;
+package appinventor.ai_ppd1994.buetradioblue.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.widget.RemoteViews;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import appinventor.ai_ppd1994.buetradioblue.Activity.NotificationActivity;
-import appinventor.ai_ppd1994.buetradioblue.Application.BUETRadio;
+import appinventor.ai_ppd1994.buetradioblue.activities.NotificationActivity;
+import appinventor.ai_ppd1994.buetradioblue.application.BUETRadio;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 /**

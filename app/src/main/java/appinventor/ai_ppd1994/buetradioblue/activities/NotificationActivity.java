@@ -1,4 +1,4 @@
-package appinventor.ai_ppd1994.buetradioblue.Activity;
+package appinventor.ai_ppd1994.buetradioblue.activities;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -19,7 +19,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawerNotification;
+import appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawerNotification;
 import appinventor.ai_ppd1994.buetradioblue.R;
 
 public class NotificationActivity extends AppCompatActivity {
@@ -45,7 +45,6 @@ public class NotificationActivity extends AppCompatActivity {
         option= (Button) findViewById(R.id.bOption);
 
         database = FirebaseDatabase.getInstance();
-
 
         from=getIntent().getExtras().getString("From");
         if(from.equals("Notification")) {
@@ -107,17 +106,14 @@ public class NotificationActivity extends AppCompatActivity {
         {
             option.setVisibility(View.GONE);
             header.setText("Info: ");
-            message.setText("BUET Radio is a community radio run by the students of Bangladesh University of Engineering & Technology. This radio will be on air on every wednesday(the Chan Raat of BUET) at 10 pm and is hoping to broadcast the events of BUET.");
-
+            message.setText(R.string.info_main);
         }
         else if(from.equals("Requests"))
         {
             header.setText("Requests: ");
             message.setText("");
             ref = database.getReference("requests");
-            //System.out.println(mAuth.getCurrentUser().getEmail());
-            //System.out.println("Events Auth"+ref.getAuth());
-            //ref = new Firebase("https://buetradio-865f1.firebaseio.com/events");
+
             try {
                 if (mAuth.getCurrentUser().getEmail().equals("ajoydas1996@gmail.com")) {
                     option.setVisibility(View.VISIBLE);
@@ -189,12 +185,8 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void setupDrawer() {
-//        mToolbar = (Toolbar) findViewById(R.id.app_bar);
-//        mContainerToolbar = (ViewGroup) findViewById(R.id.container_app_bar);
-        //set the Toolbar as ActionBar
-        //setSupportActionBar(mToolbar);
+
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //setup the NavigationDrawer
         mDrawerFragment = (FragmentDrawerNotification)
                 getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
         mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
@@ -208,8 +200,8 @@ public class NotificationActivity extends AppCompatActivity {
 
 
     public void onDrawerSlide(float slideOffset) {
-
     }
+
     public void onDrawerItemClicked(int index) {
         if (index == 0) {
 
@@ -229,7 +221,6 @@ public class NotificationActivity extends AppCompatActivity {
         }else if(index==1)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 1");
             finish();
             startActivity(intent);
@@ -237,7 +228,6 @@ public class NotificationActivity extends AppCompatActivity {
         else if(index==2)
         {
             Intent intent=new Intent(getApplicationContext(),PlayerActivity.class);
-            intent.putExtra("Stream","http://87.117.217.103:38164");
             intent.putExtra("Player","Channel 2");
             finish();
             startActivity(intent);

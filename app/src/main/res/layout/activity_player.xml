@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="appinventor.ai_ppd1994.buetradioblue.Activity.PlayerActivity">
+    tools:context="appinventor.ai_ppd1994.buetradioblue.activities.PlayerActivity">
 
     <LinearLayout
         android:id="@+id/container_app_bar"
@@ -176,7 +176,7 @@
     </LinearLayout>
     <fragment
         android:id="@+id/fragment_navigation_drawer"
-        android:name="appinventor.ai_ppd1994.buetradioblue.Fragment.FragmentDrawerPlayer"
+        android:name="appinventor.ai_ppd1994.buetradioblue.fragments.FragmentDrawerPlayer"
         android:layout_width="@dimen/nav_drawer_width"
         android:layout_height="match_parent"
         android:layout_gravity="start"
