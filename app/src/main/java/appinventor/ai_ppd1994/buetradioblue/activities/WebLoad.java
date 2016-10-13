@@ -40,26 +40,13 @@ public class WebLoad extends AppCompatActivity {
         setupDrawer();
         mAuth = FirebaseAuth.getInstance();
         value=getIntent().getExtras().getString("Url");
-        browser=null;
-        load();
-
-    }
-    private void setupDrawer() {
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        //setup the NavigationDrawer
-        mDrawerFragment = (FragmentDrawerWebLoad)
-                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
-        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
-    }
-
-
-    public void load()
-    {
         try {
             progressDialog = ProgressDialog.show(WebLoad.this, "Connecting to the Archive..", "Please wait..", true, true);
             browser = (WebView) findViewById(webView);
+
             if (browser != null) {
+                browser.getSettings().setJavaScriptEnabled(true);
+                browser.loadUrl(value);
                 browser .setWebViewClient(new WebViewClient() {
                     @Override
                     public void onPageFinished(WebView view, String url) {
@@ -67,11 +54,6 @@ public class WebLoad extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 });
-            }
-
-            if (browser != null) {
-                browser.getSettings().setJavaScriptEnabled(true);
-                browser.loadUrl(value);
             }
             browser.setDownloadListener(new DownloadListener() {
                 public void onDownloadStart(String url, String userAgent,
@@ -81,7 +63,8 @@ public class WebLoad extends AppCompatActivity {
                     i.setData(Uri.parse(url));
                     startActivity(i);
                 }
-            });/*
+            });
+            /*
             browser.setDownloadListener(new DownloadListener() {
                 public void onDownloadStart(String url, String userAgent,
                                             String contentDisposition, String mimetype,
@@ -102,13 +85,15 @@ public class WebLoad extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Page Can't be loaded.",Toast.LENGTH_LONG).show();
             finish();
         }
+
     }
-    @Override
-    public void onConfigurationChanged(Configuration newConfig)
-    {
-        finish();
-        startActivity(new Intent(BUETRadio.getAppContext(),WebLoad.class));
-        //load();
+    private void setupDrawer() {
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        //setup the NavigationDrawer
+        mDrawerFragment = (FragmentDrawerWebLoad)
+                getSupportFragmentManager().findFragmentById(R.id.fragment_navigation_drawer);
+        mDrawerFragment.setUp(R.id.fragment_navigation_drawer, (DrawerLayout) findViewById(R.id.drawer_layout), mToolbar);
     }
 
     @Override
@@ -117,10 +102,13 @@ public class WebLoad extends AppCompatActivity {
 
         try {
             if(browser!=null) {
+                browser.loadUrl("about:blank");
                 browser.stopLoading();
-                browser.onPause();
-                browser.pauseTimers();
-                //browser.destroy();
+//                    browser.onPause();
+//                    browser.pauseTimers();
+                browser.clearCache(true);
+//                    browser.destroy();
+                browser=null;
 
             }
             progressDialog.dismiss();
@@ -129,7 +117,9 @@ public class WebLoad extends AppCompatActivity {
         {
             System.out.println("Can't end progress dialog in player");
         }
+        finish();
     }
+
 
 
     @Override
@@ -143,9 +133,11 @@ public class WebLoad extends AppCompatActivity {
                 if(browser!=null) {
                     browser.loadUrl("about:blank");
                     browser.stopLoading();
-                    browser.onPause();
-                    browser.pauseTimers();
-                    //browser.destroy();
+//                    browser.onPause();
+//                    browser.pauseTimers();
+                    browser.clearCache(true);
+//                    browser.destroy();
+                    browser=null;
 
                 }
                 progressDialog.dismiss();

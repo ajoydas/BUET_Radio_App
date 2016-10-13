@@ -362,8 +362,10 @@ public class PlayerActivity extends AppCompatActivity implements View.OnClickLis
         if (view == stop) {
             NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
             notificationManager.cancelAll();
-
-            PlayerConnection.getMediaPlayer().stop();
+            if(PlayerConnection.getMediaPlayer().isPlaying())
+            {
+                PlayerConnection.getMediaPlayer().stop();
+            }
             PlayerConnection.setIsRecording(false);
             play.setImageResource(R.drawable.pause);
             record.setImageResource(R.drawable.record);
